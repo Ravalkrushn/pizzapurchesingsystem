@@ -1,0 +1,68 @@
+<main>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h1 style="color: #ffc400;">Add Pizza Detail</h1>
+            </div>
+
+        </div>
+        <div class="row mt-5">
+            
+            <div class="col-md-6 ">
+                <form  #pform="ngForm" (submit)="onsubmit(pform)" novalidate>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Pizza Name</label>
+                        <input type="text" class="form-control" name="txtname" ngModel #txtname="ngModel" required pattern="[a-zA-Z ]+" minlength="2" [(ngModel)]="pizzadetail.pizza_name">
+                         @if(txtname.invalid && (txtname.dirty || txtname.touched)){
+                            @if(txtname.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Pizza Name</p>
+                            }@else if(txtname.hasError("pattern")){
+                                <p class="alert alert-danger">Please Enter Only Characters in Pizza Name</p>
+                            }@else if(txtname.hasError("minlength")){
+                                <p class="alert alert-danger">Please Enter More Than 2 Characters in Pizza Name</p>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Description</label>
+                        <textarea class="form-control" name="txtdesc" ngModel #txtdesc="ngModel" required [(ngModel)]="pizzadetail.description"></textarea>
+                        @if(txtdesc.invalid && (txtdesc.dirty || txtdesc.touched)){
+                            @if(txtdesc.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Description</p>
+                            }
+                        }
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Price</label>
+                        <input type="text" class="form-control" name="txtprice" ngModel #txtprice="ngModel" required pattern="[0-9]+" minlength="1" maxlength="10" [(ngModel)]="pizzadetail.price">
+                        @if(txtprice.invalid && (txtprice.dirty || txtprice.touched)){
+                            @if(txtprice.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Price</p>
+                            }@else if(txtprice.hasError("pattern")){
+                                <p class="alert alert-danger">Please Enter Only Digits In Price</p>
+                            }@else if(txtprice.hasError("minlength")){
+                                <p class="alert alert-danger">Please Enter Min 1 Digits in Price</p>
+                            }
+                        } 
+                    </div>
+                    <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Select Image</label>
+                    <input type="file" class="form-control" name="txtimg" aria-describedby="emailHelp" ngModel #txtimg="ngModel" accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)" />
+                    
+                    @if(fileTypeError){
+                        <div class="text-danger">Please Select Only Image File No other File Type Allowed</div>
+                    }
+                    
+                   <img src="http://localhost:3000/pizza_img/{{pizzadetail.pizza_img}}" style="width:150px; height:150px">
+                    
+                </div>
+                    
+                    <input type="hidden" [(ngModel)]="pizzadetail.pizza_id" name="txtpid" />
+                    <button type="submit" [disabled]="!pform.valid" class="btn" style="background-color: #ffe57f;">UPDATE</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>

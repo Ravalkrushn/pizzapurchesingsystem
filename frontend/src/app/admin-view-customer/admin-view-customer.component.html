@@ -1,0 +1,48 @@
+<main>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h1 style="color: #ffc400;">VIEW CUSTOMER DETAIL</h1>
+            </div>
+
+        </div>
+        <div class="row mt-5">
+          
+            <div class="col-md-12 ">
+               @if(custdetail.length == 0){
+                    <h1>No Customer Detail Found</h1>
+               }@else{
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>CUSTOMER ID</th>
+                                <th>CUSTOMER NAME</th>
+                                <th>ADDRESS</th>
+                                <th>CITY</th>
+                                <th>MOBILE NO</th>
+                                <th>EMAIL ID</th>
+                                <th>UPDATE</th>
+                                <th>DELETE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(cust of custdetail; track cust.customer_id){
+                                <tr>
+                                    <td>{{cust.customer_id}}</td>
+                                    <td>{{cust.customer_name}}</td>
+                                    <td>{{cust.address}}</td>
+                                    <td>{{cust.city}}</td>
+                                    <td>{{cust.mobile_no}}</td>
+                                    <td>{{cust.email_id}}</td>
+                                    <td><a class="btn" style="background-color: #ffe57f;" routerLink="/admin_update_customer/{{cust.customer_id}}">UPDATE</a></td>
+                                    <td><a class="btn" style="background-color: #ffe57f;" (click)="ondelete(cust.customer_id)">DELETE</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+               }
+            </div>
+        </div>
+    </div>
+</main>

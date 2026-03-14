@@ -1,0 +1,92 @@
+<main>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h1 style="color: #ffc400;">Restaurant Registration</h1>
+            </div>
+
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 ">
+                <img src="/assets/images/regis.gif" style="width:100%;" />
+            </div>
+            <div class="col-md-6 ">
+                <form #resregisform="ngForm" (submit)="onsubmit(resregisform)" novalidate> 
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Restaurant Name</label>
+                        <input type="text" class="form-control" name="txtname" ngModel #txtname="ngModel" required pattern="[a-zA-Z ]+" minlength="2">
+                        @if(txtname.invalid && (txtname.dirty || txtname.touched)){
+                            @if(txtname.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Restaurant Name</p>
+                            }@else if(txtname.hasError("pattern")){
+                                <p class="alert alert-danger">Please Enter Only Characters in Restaurant Name</p>
+                            }@else if(txtname.hasError("minlength")){
+                                <p class="alert alert-danger">Please Enter More Than 2 Characters in Restaurant Name</p>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Address</label>
+                        <textarea class="form-control" name="txtadd" ngModel #txtadd="ngModel" required></textarea>
+                        @if(txtadd.invalid && (txtadd.dirty || txtadd.touched)){
+                            @if(txtadd.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Restaurant Address</p>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter City</label>
+                        <input type="text" class="form-control" name="txtcity" ngModel #txtcity="ngModel" required pattern="[a-zA-Z ]+" minlength="2">
+                        @if(txtcity.invalid && (txtcity.dirty || txtcity.touched)){
+                            @if(txtcity.hasError("required")){
+                                <p class="alert alert-danger">Please Enter City Name</p>
+                            }@else if(txtcity.hasError("pattern")){
+                                <p class="alert alert-danger">Please Enter Only Characters in City Name</p>
+                            }@else if(txtcity.hasError("minlength")){
+                                <p class="alert alert-danger">Please Enter More Than 2 Characters in City Name</p>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Mobile No</label>
+                        <input type="text" class="form-control" name="txtmno" ngModel #txtmno="ngModel" required pattern="[0-9]+" minlength="10" maxlength="10">
+                        @if(txtmno.invalid && (txtmno.dirty || txtmno.touched)){
+                            @if(txtmno.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Your Mobile No</p>
+                            }@else if(txtmno.hasError("pattern")){
+                                <p class="alert alert-danger">Please Enter Only Digits in Mobile No</p>
+                            }@else if(txtmno.hasError("minlength")){
+                                <p class="alert alert-danger">Please Enter 10 Digits in Mobile No</p>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Enter Email ID</label>
+                        <input type="email" class="form-control" name="txtemail" ngModel #txtemail="ngModel" required pattern="^[a-z0-9._%+-]+@[a-z0-9._%+-]+\.[a-z]{2,4}$">
+                        @if(txtemail.invalid && (txtemail.dirty || txtemail.touched)){
+                            @if(txtemail.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Your Email ID</p>
+                            }@else if(txtemail.hasError("pattern")){
+                                <p class="alert alert-danger">Please Enter Valid Email ID</p>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Enter Password</label>
+                        <input type="password" class="form-control" name="txtpwd" ngModel #txtpwd="ngModel" required  minlength="6" maxlength="10">
+                         @if(txtpwd.invalid && (txtpwd.dirty || txtpwd.touched)){
+                            @if(txtpwd.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Your Password</p>
+                            }@else if(txtpwd.hasError("minlength")){
+                                <p class="alert alert-danger">Please Enter More Than 6 Charactters in Password</p>
+                            }
+                        }
+                    </div>
+                    
+                    <button type="submit" [disabled]="!resregisform.valid" class="btn" style="background-color: #ffe57f;">REGISTER</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>

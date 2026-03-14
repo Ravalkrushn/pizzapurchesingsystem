@@ -1,0 +1,113 @@
+<nav class="navbar navbar-expand-lg " style="background-color: #ffe57f;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><img src="/assets/images/logo2.png" style="width: 400px; height:50px;"/></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    @if(authservice.adminloggedin)
+    {
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/admin_view_restaurant">View Restaurant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/admin_view_customer">View Customer</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reports
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="#">Restaurant Detail Report</a></li>
+            <li><a class="dropdown-item" routerLink="#">Customer Detail Report</a></li>
+            <li><a class="dropdown-item" routerLink="#">Order Detail Report</a></li>
+            <li><a class="dropdown-item" routerLink="#">Bill Detail Report</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" (click)="onlogout()">Logout</a>
+        </li>
+        
+      </ul>
+    
+    </div>
+    }@else if(authservice.restloggedin)
+    {
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/rest_view_pizza">View Pizza</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/rest_view_new_order">New Order</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reports
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="#">Customer Detail Report</a></li>
+            <li><a class="dropdown-item" routerLink="#">Order Detail Report</a></li>
+            <li><a class="dropdown-item" routerLink="#">Bill Detail Report</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" (click)="onrestlogout()">Logout</a>
+        </li>
+        
+      </ul>
+    
+    </div>
+    }@else if(authservice.custloggedin)
+    {
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/cust_select_rest">Select Restaurant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/cust_view_parcel">View Parcel</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/cust_view_all_orders">View All Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" (click)="oncustlogout()">Logout</a>
+        </li>
+        
+      </ul>
+    
+    </div>
+    }
+    @else{
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/about">About Us</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Registration
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/rest_regis">Restaurant</a></li>
+            <li><a class="dropdown-item" routerLink="/cust_regis">Customer</a></li>
+            
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/contact">Contact Us</a>
+        </li>
+      </ul>
+    
+    </div>
+  }
+  </div>
+</nav>

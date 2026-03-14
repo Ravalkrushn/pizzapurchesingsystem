@@ -1,0 +1,50 @@
+<main>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h1 style="color: #ffc400;">VIEW CUSTOMER DETAIL</h1>
+            </div>
+
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12 ">
+                <a routerLink="/rest_add_pizza" class="btn btn-warning">ADD PIZZA DETAIL</a>
+            </div>
+            <div class="col-md-12 mt-5">
+               @if(pizzadetail.length == 0){
+                    <h1>No Pizza Detail Found</h1>
+               }@else{
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>PIZZA ID</th>
+                                <th>PIZZA NAME</th>
+                                <th>DESCRIPTION</th>
+                                <th>PRICE</th>
+                                <th>PIZZA IMAGE</th>
+                                
+                                <th>UPDATE</th>
+                                <th>DELETE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(pizza of pizzadetail; track pizza.pizza_id){
+                                <tr>
+                                    <td>{{pizza.pizza_id}}</td>
+                                    <td>{{pizza.pizza_name}}</td>
+                                    <td>{{pizza.description}}</td>
+                                    <td>{{pizza.price}}</td>
+                                    <td><img src="http://localhost:3000/pizza_img/{{pizza.pizza_img}}" style="width:150px; height:150px;" /></td>
+                                    
+                                    <td><a class="btn" style="background-color: #ffe57f;" routerLink="/rest_update_pizza/{{pizza.pizza_id}}">UPDATE</a></td>
+                                    <td><a class="btn" style="background-color: #ffe57f;" (click)="ondelete(pizza.pizza_id)">DELETE</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+               }
+            </div>
+        </div>
+    </div>
+</main>
