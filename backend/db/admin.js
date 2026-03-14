@@ -8,5 +8,5 @@ const adminSchema = new mongoose.Schema({
   versionKey: false // Disable the version key
 });
 
-const Admin = mongoose.model("admin_info",adminSchema);
+const Admin = mongoose.model("admin_info", adminSchema, "admin_info");
 module.exports = Admin;

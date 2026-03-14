@@ -12,6 +12,8 @@ import { AdminUpdateCustomerComponent } from './admin-update-customer/admin-upda
 import { RestViewPizzaComponent } from './rest-view-pizza/rest-view-pizza.component';
 import { RestAddPizzaComponent } from './rest-add-pizza/rest-add-pizza.component';
 import { RestUpdatePizzaComponent } from './rest-update-pizza/rest-update-pizza.component';
+import { AdminAddCategoryComponent } from './admin-add-category/admin-add-category.component';
+
 
 import { CustSelectRestComponent } from './cust-select-rest/cust-select-rest.component';
 
@@ -30,4 +32,5 @@ export const routes: Routes = [
     {path:"rest_add_pizza",component: RestAddPizzaComponent},
     {path:"rest_update_pizza/:pid",component: RestUpdatePizzaComponent},
     {path:"cust_select_rest",component: CustSelectRestComponent},
+    {path:"admin_add_category",component: AdminAddCategoryComponent},
 ];

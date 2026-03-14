@@ -1,0 +1,33 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Add New Category</h3>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="onsubmit()">
+                        <div class="mb-3">
+                            <label for="catname" class="form-label">Category Name</label>
+                            <input type="text" id="catname" name="catname" class="form-control" [(ngModel)]="catname" placeholder="e.g. Margherita, Pepperoni" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label d-block">Category Type</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="cattype" id="veg" value="Veg" [(ngModel)]="cattype" required>
+                                <label class="form-check-label" for="veg">Veg</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="cattype" id="nonveg" value="Non-Veg" [(ngModel)]="cattype" required>
+                                <label class="form-check-label" for="nonveg">Non-Veg</label>
+                            </div>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success">Add Category</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

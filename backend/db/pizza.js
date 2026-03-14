@@ -6,10 +6,12 @@ const pizzaSchema = new mongoose.Schema({
     description: String,
     price: Number,
     pizza_img: String,
-    res_id: Number
+    res_id: Number,
+    cat_id: Number,
+    pizza_type: String
 }, {
   versionKey: false // Disable the version key
 });
 
-const Pizza = mongoose.model("pizza_info",pizzaSchema);
+const Pizza = mongoose.model("pizza_info", pizzaSchema, "pizza_info");
 module.exports = Pizza;

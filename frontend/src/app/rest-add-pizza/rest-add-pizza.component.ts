@@ -1,21 +1,33 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rest-add-pizza',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './rest-add-pizza.component.html',
   styleUrl: './rest-add-pizza.component.css'
 })
-export class RestAddPizzaComponent {
+export class RestAddPizzaComponent implements OnInit {
 fileTypeError: boolean = false;
   txtimg: File | null = null;
   restid:any;
+  categories: any[] = [];
+
   constructor(public router: Router, public http: HttpClient) { }
   
+  ngOnInit() {
+    this.http.get("http://localhost:3000/fetch_categories").subscribe((res: any) => {
+      console.log("Categories fetched:", res);
+      this.categories = res;
+    }, (err) => {
+      console.error("Error fetching categories:", err);
+    });
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -48,6 +60,8 @@ fileTypeError: boolean = false;
         formData.append('desc', form.value.txtdesc);
         formData.append('price', form.value.txtprice);
         formData.append('restid', this.restid);
+        formData.append('catid', form.value.txtcatid);
+        formData.append('type', form.value.txttype);
         
         this.http.post('http://localhost:3000/rest_add_pizza', formData)
         .subscribe({

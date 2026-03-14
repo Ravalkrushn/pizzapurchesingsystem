@@ -12,5 +12,5 @@ const resSchema = new mongoose.Schema({
   versionKey: false // Disable the version key
 });
 
-const Restaurant = mongoose.model("res_info",resSchema);
+const Restaurant = mongoose.model("res_info", resSchema, "res_info");
 module.exports = Restaurant;

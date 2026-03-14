@@ -1,19 +1,24 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-rest-update-pizza',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './rest-update-pizza.component.html',
+
   styleUrl: './rest-update-pizza.component.css'
 })
-export class RestUpdatePizzaComponent {
+export class RestUpdatePizzaComponent implements OnInit {
   fileTypeError: boolean = false;
   txtimg: File | null = null;
   public pizzadetail: any;
+  categories: any[] = [];
+
   restid: any;
   pid: any;
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
@@ -21,8 +26,15 @@ export class RestUpdatePizzaComponent {
 
   }
   ngOnInit() {
+    this.fetchcategories();
     this.fetchpizzadetail();
   }
+  fetchcategories() {
+    this.http.get("http://localhost:3000/fetch_categories").subscribe((res: any) => {
+      this.categories = res;
+    });
+  }
+
   fetchpizzadetail() {
 
     this.http.get("http://localhost:3000/fetch_single_pizza_detail/" + this.pid)
@@ -68,6 +80,9 @@ export class RestUpdatePizzaComponent {
       formData.append('price', form.value.txtprice);
       formData.append('restid', this.restid);
       formData.append('pizzaid', form.value.txtpid);
+      formData.append('catid', form.value.txtcatid);
+      formData.append('type', form.value.txttype);
+
 
       this.http.post('http://localhost:3000/rest_update_pizza_withimg', formData)
         .subscribe({
@@ -87,8 +102,11 @@ export class RestUpdatePizzaComponent {
         desc: form.value.txtdesc,
         price: form.value.txtprice,
         restid: this.restid,
-        pizzaid: form.value.txtpid
+        pizzaid: form.value.txtpid,
+        catid: form.value.txtcatid,
+        type: form.value.txttype
        }
+
 
       this.http.post("http://localhost:3000/rest_update_pizza", pdata)
         .subscribe({
