@@ -1,0 +1,112 @@
+<div class="container mt-5">
+    <div class="row">
+        <!-- Cart Items Section -->
+        <div class="col-md-8">
+            <div class="card shadow border-0 rounded-4 mb-4">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h3 class="fw-bold"><i class="bi bi-cart3 text-warning"></i> My Shopping Cart</h3>
+                    <hr>
+                </div>
+                <div class="card-body px-4">
+                    @if(cartItems.length > 0) {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Pizza</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for(item of cartItems; track $index) {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img [src]="'http://localhost:3000/pizza_img/' + item.pizza_img" class="rounded-3 me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <span class="fw-bold">{{item.pizza_name}}</span>
+                                                </div>
+                                            </td>
+                                            <td>₹{{item.price}}</td>
+                                            <td>
+                                                <div class="input-group input-group-sm" style="width: 100px;">
+                                                    <button class="btn btn-outline-secondary" (click)="updateQty($index, item.qty - 1)">-</button>
+                                                    <input type="text" class="form-control text-center" [value]="item.qty" readonly>
+                                                    <button class="btn btn-outline-secondary" (click)="updateQty($index, item.qty + 1)">+</button>
+                                                </div>
+                                            </td>
+                                            <td class="fw-bold text-success">₹{{item.price * item.qty}}</td>
+                                            <td>
+                                                <button class="btn btn-link text-danger p-0" (click)="removeItem($index)">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    } @else {
+                        <div class="text-center py-5">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-2130356-1800917.png" style="width: 150px;">
+                            <h5 class="text-muted mt-3">Your cart is empty!</h5>
+                            <button class="btn btn-warning mt-3 rounded-pill" routerLink="/cust_select_rest">Order Something</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Section -->
+        <div class="col-md-4">
+            <div class="card shadow border-0 rounded-4 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-4">Order Summary</h4>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Items Total</span>
+                        <span class="fw-bold">₹{{totalAmount}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Delivery Fee</span>
+                        <span class="text-success fw-bold">FREE</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h5 fw-bold">Total Amount</span>
+                        <span class="h5 fw-bold text-success">₹{{totalAmount}}</span>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Delivery Address</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="addrType" id="defaultAddr" [(ngModel)]="useDefaultAddress" [value]="true" (change)="onAddressTypeChange()">
+                            <label class="form-check-label small" for="defaultAddr">Use Saved Address</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="addrType" id="newAddr" [(ngModel)]="useDefaultAddress" [value]="false" (change)="onAddressTypeChange()">
+                            <label class="form-check-label small" for="newAddr">New Address</label>
+                        </div>
+                        
+                        <textarea class="form-control form-control-sm mt-2 rounded-3" rows="3" [(ngModel)]="deliveryAddress" [placeholder]="useDefaultAddress ? 'Address not found' : 'Enter new delivery address'" [readonly]="useDefaultAddress"></textarea>
+                        
+                        <h6 class="fw-bold mt-3">Mobile Number</h6>
+                        <input type="text" class="form-control form-control-sm mt-2 rounded-3" [(ngModel)]="deliveryMobileNo" [placeholder]="useDefaultAddress ? 'Mobile number not found' : 'Enter mobile number'" [readonly]="useDefaultAddress">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-warning btn-lg rounded-pill fw-bold text-white shadow-sm" [disabled]="cartItems.length === 0" (click)='placeOrder()'>
+                            CONFIRM ORDER
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill mt-2" routerLink="/cust_view_pizza">
+                            Continue Shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,5 +12,5 @@ const custSchema = new mongoose.Schema({
   versionKey: false // Disable the version key
 });
 
-const Customer = mongoose.model("customer_info", custSchema, "customer_info");
+const Customer = mongoose.model("customer_info", custSchema);
 module.exports = Customer;

@@ -13,5 +13,5 @@ const pizzaSchema = new mongoose.Schema({
   versionKey: false // Disable the version key
 });
 
-const Pizza = mongoose.model("pizza_info", pizzaSchema, "pizza_info");
+const Pizza = mongoose.model("pizza_info", pizzaSchema);
 module.exports = Pizza;

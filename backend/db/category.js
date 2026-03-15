@@ -8,5 +8,5 @@ const categorySchema = new mongoose.Schema({
     versionKey: false
 });
 
-const CategoryMaster = mongoose.model("category_master", categorySchema, "category_master");
+const CategoryMaster = mongoose.model("category_master", categorySchema);
 module.exports = CategoryMaster;

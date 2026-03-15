@@ -8,6 +8,8 @@ const Restaurant = require("./db/restaurant");
 const Customer = require("./db/customer");
 const Pizza = require("./db/pizza");
 const Category = require("./db/category");
+const Order = require("./db/order");
+
 
 
 app = express();
@@ -83,6 +85,35 @@ app.get("/fetch_categories", async function (req, res) {
     let result = await Category.find();
     res.send(result);
 })
+
+app.post("/place_order", async function (req, res) {
+    let result = await Order.find().sort({ order_id: -1 }).limit(1);
+    let neworderid = 0;
+    if (result.length == 0) {
+        neworderid = 1;
+    } else {
+        neworderid = parseInt(result[0].order_id) + 1;
+    }
+    let ob1 = new Order({
+        order_id: neworderid,
+        customer_id: parseInt(req.body.customer_id),
+        parcel_id: parseInt(req.body.parcel_id),
+        res_id: parseInt(req.body.res_id),
+        items: req.body.items,
+        total_amount: parseFloat(req.body.total_amount),
+        del_address: req.body.del_address,
+        delivery_address: req.body.delivery_address,
+        del_moblie_no: req.body.del_moblie_no
+    });
+    let result2 = await ob1.save();
+    res.send(result2);
+})
+
+app.get("/fetch_cust_orders/:cid", async function (req, res) {
+    let result = await Order.find({ customer_id: parseInt(req.params.cid) });
+    res.send(result);
+})
+
 
 
 

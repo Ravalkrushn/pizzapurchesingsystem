@@ -1,1 +1,62 @@
-<p>cust-select-rest works!</p>
+<div class="container mt-5">
+    <!-- Header & Search -->
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4" style="color: #ffc400; font-weight: bold;">Choose Your Favorite Restaurant</h1>
+            <p class="text-muted">Discover the best pizzas in your city!</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-6">
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-primary"></i>
+                </span>
+                <input type="text" 
+                       class="form-control border-start-0 ps-0" 
+                       placeholder="Search by City or Restaurant Name..." 
+                       [(ngModel)]="searchText" 
+                       (keyup)="filterByCity()">
+            </div>
+        </div>
+    </div>
+
+    <!-- Restaurant Grid -->
+    <div class="row">
+        @if(filteredRestaurants.length > 0) {
+            @for(res of filteredRestaurants; track res.res_id) {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm restaurant-card border-0">
+                        <!-- Shop Image Placeholder -->
+                        <div class="img-container">
+                            <img src="/assets/images/shop-placeholder.jpg" 
+                                 class="card-img-top" 
+                                 alt="{{res.res_name}}"
+                                 onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=500&auto=format&fit=crop'">
+                            <div class="city-badge">{{res.city}}</div>
+                        </div>
+                        
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold text-dark mb-2">{{res.res_name}}</h5>
+                            <p class="card-text text-muted small mb-3">
+                                <i class="bi bi-geo-alt-fill text-danger"></i> {{res.address}}
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-warning fw-bold text-white shadow-sm" 
+                                        (click)="viewMenu(res.res_id)">
+                                    View Menu <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        } @else {
+            <div class="col-12 text-center mt-5">
+                <img src="https://images.unsplash.com/photo-1594007654729-407eedc4be65?q=80&w=300" style="border-radius: 10%;">
+                <h4 class="text-muted mt-3">No restaurants found matching your search.</h4>
+            </div>
+        }
+    </div>
+</div>

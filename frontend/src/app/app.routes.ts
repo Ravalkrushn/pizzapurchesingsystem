@@ -13,9 +13,13 @@ import { RestViewPizzaComponent } from './rest-view-pizza/rest-view-pizza.compon
 import { RestAddPizzaComponent } from './rest-add-pizza/rest-add-pizza.component';
 import { RestUpdatePizzaComponent } from './rest-update-pizza/rest-update-pizza.component';
 import { AdminAddCategoryComponent } from './admin-add-category/admin-add-category.component';
-
+import { CustViewPizzaComponent } from './cust-view-pizza/cust-view-pizza.component';
+import { CustCartComponent } from './cust-cart/cust-cart.component';
+import { CustViewParcelComponent } from './cust-view-parcel/cust-view-parcel.component';
 
 import { CustSelectRestComponent } from './cust-select-rest/cust-select-rest.component';
+
+
 
 export const routes: Routes = [
     {path:"",component: HomeComponent},
@@ -33,4 +37,8 @@ export const routes: Routes = [
     {path:"rest_update_pizza/:pid",component: RestUpdatePizzaComponent},
     {path:"cust_select_rest",component: CustSelectRestComponent},
     {path:"admin_add_category",component: AdminAddCategoryComponent},
+    {path:"cust_view_pizza",component: CustViewPizzaComponent},
+    {path:"cust_cart",component: CustCartComponent},
+    {path:"cust_view_parcel",component: CustViewParcelComponent},
+    {path:"cust_view_all_orders",component: CustCartComponent},
 ];
