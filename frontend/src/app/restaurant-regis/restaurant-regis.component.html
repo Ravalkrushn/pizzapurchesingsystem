@@ -74,7 +74,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Enter Password</label>
-                        <input type="password" class="form-control" name="txtpwd" ngModel #txtpwd="ngModel" required  minlength="6" maxlength="10">
+                        <div class="input-group">
+                            <input type="password" #pwdInput class="form-control" name="txtpwd" ngModel #txtpwd="ngModel" required  minlength="6" maxlength="10">
+                            <button class="btn btn-outline-secondary" type="button" (click)="pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password'">
+                                {{ pwdInput.type === 'password' ? '👁️' : '🙈' }}
+                            </button>
+                        </div>
                          @if(txtpwd.invalid && (txtpwd.dirty || txtpwd.touched)){
                             @if(txtpwd.hasError("required")){
                                 <p class="alert alert-danger">Please Enter Your Password</p>

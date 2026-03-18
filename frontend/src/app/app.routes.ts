@@ -18,6 +18,7 @@ import { CustCartComponent } from './cust-cart/cust-cart.component';
 import { CustViewParcelComponent } from './cust-view-parcel/cust-view-parcel.component';
 
 import { CustSelectRestComponent } from './cust-select-rest/cust-select-rest.component';
+import { RestNewOrderViewComponent } from './rest-new-order-view/rest-new-order-view.component';
 
 
 
@@ -40,5 +41,6 @@ export const routes: Routes = [
     {path:"cust_view_pizza",component: CustViewPizzaComponent},
     {path:"cust_cart",component: CustCartComponent},
     {path:"cust_view_parcel",component: CustViewParcelComponent},
-    {path:"cust_view_all_orders",component: CustCartComponent},
+    {path:"cust_view_all_orders",component: CustViewParcelComponent},
+    {path:"rest_new_order_view",component: RestNewOrderViewComponent},
 ];

@@ -12,10 +12,14 @@ const Order = require("./db/order");
 
 
 
-app = express();
+const app = express();
 
-app.use(cors());
-app.use(express.urlencoded({extended:false}));
+app.use(cors({
+    origin: ["http://localhost:4200", "http://127.0.0.1:4200"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
 
@@ -46,25 +50,25 @@ connectDb().catch((err) => {
 })
 
 
-app.get("/",function(req,res){
+app.get("/", function (req, res) {
     res.send("<h1>Hello From Backend Server</h1>");
 })
 
-app.post("/res_regis",async function(req,res){
-    let result = await Restaurant.find({email_id: req.body.email});
-    if(result.length==0){
-        let result2 = await Restaurant.find().sort({res_id:-1}).limit(1);
+app.post("/res_regis", async function (req, res) {
+    let result = await Restaurant.find({ email_id: req.body.email });
+    if (result.length == 0) {
+        let result2 = await Restaurant.find().sort({ res_id: -1 }).limit(1);
         let newresid = 0;
-        if(result2.length==0){
+        if (result2.length == 0) {
             newresid = 1;
-        }else{
+        } else {
             newresid = parseInt(result2[0].res_id) + 1;
         }
-        let ob1 = new Restaurant({res_id: newresid,res_name: req.body.name,address: req.body.add,city: req.body.city,mobile_no: req.body.mno,email_id:req.body.email,pwd: req.body.pwd});
+        let ob1 = new Restaurant({ res_id: newresid, res_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd });
         let result3 = await ob1.save();
         res.send(result3);
-    }else{
-        res.send({"message":"Email Id Already Exists"});
+    } else {
+        res.send({ "message": "Email Id Already Exists" });
     }
 })
 
@@ -117,80 +121,87 @@ app.get("/fetch_cust_orders/:cid", async function (req, res) {
 
 
 
-app.post("/cust_regis",async function(req,res){
-    let result = await Customer.find({email_id: req.body.email});
-    if(result.length==0){
-        let result2 = await Customer.find().sort({customer_id:-1}).limit(1);
+app.post("/cust_regis", async function (req, res) {
+    let result = await Customer.find({ email_id: req.body.email });
+    if (result.length == 0) {
+        let result2 = await Customer.find().sort({ customer_id: -1 }).limit(1);
         let newcustid = 0;
-        if(result2.length==0){
+        if (result2.length == 0) {
             newcustid = 1;
-        }else{
+        } else {
             newcustid = parseInt(result2[0].customer_id) + 1;
         }
-        let ob1 = new Customer({customer_id: newcustid,customer_name: req.body.name,address: req.body.add,city: req.body.city,mobile_no: req.body.mno,email_id:req.body.email,pwd: req.body.pwd});
+        let ob1 = new Customer({ customer_id: newcustid, customer_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd });
         let result3 = await ob1.save();
         res.send(result3);
-    }else{
-        res.send({"message":"Email Id Already Exists"});
+    } else {
+        res.send({ "message": "Email Id Already Exists" });
     }
 })
 
-app.post("/login_user",async function(req,res){
-    let result = await Admin.findOne({email_id: req.body.email});
-    if(result){
-        res.send({"message":"Admin Login Successfully"});
-    }else{
-        let result2 = await Restaurant.findOne({email_id: req.body.email});
-        if(result2){
-            res.send(result2);
-        }else{
-            let result3 = await Customer.findOne({email_id: req.body.email});
-            if(result3){
-                res.send(result3);
-            }else{
-                res.send({"message": "Check Your Email Id Or Password"});
-            }
-        }
+app.post("/login_user", async function (req, res) {
+    console.log("Login Data Received from Frontend:", req.body);
+
+    // Hardcoded Admin check (agar aapko direct Admin panel test karna ho bina DB me add kiye)
+    if (req.body.email === "admin@pizzeria.com" && req.body.pwd === "admin") {
+        return res.send({ "message": "Admin Login Successfully" });
     }
+
+    let result = await Admin.findOne({ email_id: req.body.email, pwd: req.body.pwd });
+    if (result) {
+        return res.send({ "message": "Admin Login Successfully" });
+    }
+
+    let result2 = await Restaurant.findOne({ email_id: req.body.email, pwd: req.body.pwd });
+    if (result2) {
+        return res.send(result2);
+    }
+
+    let result3 = await Customer.findOne({ email_id: req.body.email, pwd: req.body.pwd });
+    if (result3) {
+        return res.send(result3);
+    }
+
+    res.send({ "message": "Check Your Email Id Or Password" });
 })
 
-app.get("/fetch_resdetail",async function(req,res){
+app.get("/fetch_resdetail", async function (req, res) {
     let result = await Restaurant.find();
     res.send(result);
 })
 
-app.delete("/delete_restaurant/:rid",async function(req,res){
-    let result = await Restaurant.deleteOne({res_id: parseInt(req.params.rid)});
+app.delete("/delete_restaurant/:rid", async function (req, res) {
+    let result = await Restaurant.deleteOne({ res_id: parseInt(req.params.rid) });
     res.send(result);
 })
 
-app.get("/fetch_single_resdetail/:rid",async function(req,res){
-    let result = await Restaurant.findOne({res_id: parseInt(req.params.rid)});
+app.get("/fetch_single_resdetail/:rid", async function (req, res) {
+    let result = await Restaurant.findOne({ res_id: parseInt(req.params.rid) });
     res.send(result);
 })
 
-app.post("/update_restaurant",async function(req,res){
-    let result = await Restaurant.updateOne({res_id: parseInt(req.body.rid)},{$set: {res_name: req.body.name,address: req.body.add,city: req.body.city,mobile_no:req.body.mno,email_id:req.body.email,pwd: req.body.pwd}});
+app.post("/update_restaurant", async function (req, res) {
+    let result = await Restaurant.updateOne({ res_id: parseInt(req.body.rid) }, { $set: { res_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd } });
     res.send(result);
 })
 
-app.get("/fetch_custdetail",async function(req,res){
+app.get("/fetch_custdetail", async function (req, res) {
     let result = await Customer.find();
     res.send(result);
 })
 
-app.delete("/delete_customer/:cid",async function(req,res){
-    let result = await Customer.deleteOne({customer_id: parseInt(req.params.cid)});
+app.delete("/delete_customer/:cid", async function (req, res) {
+    let result = await Customer.deleteOne({ customer_id: parseInt(req.params.cid) });
     res.send(result);
 })
 
-app.get("/fetch_single_custdetail/:cid",async function(req,res){
-    let result = await Customer.findOne({customer_id: parseInt(req.params.cid)});
+app.get("/fetch_single_custdetail/:cid", async function (req, res) {
+    let result = await Customer.findOne({ customer_id: parseInt(req.params.cid) });
     res.send(result);
 })
 
-app.post("/update_customer",async function(req,res){
-    let result = await Customer.updateOne({customer_id: parseInt(req.body.cid)},{$set: {customer_name: req.body.name,address: req.body.add,city: req.body.city,mobile_no:req.body.mno,email_id:req.body.email,pwd: req.body.pwd}});
+app.post("/update_customer", async function (req, res) {
+    let result = await Customer.updateOne({ customer_id: parseInt(req.body.cid) }, { $set: { customer_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd } });
     res.send(result);
 })
 
@@ -204,39 +215,51 @@ app.post("/rest_add_pizza", upload.single('image'), async function (req, res) {
     } else {
         newpizzaid = parseInt(result[0].pizza_id) + 1;
     }
-    let ob1 = new Pizza({ pizza_id: parseInt(newpizzaid), pizza_name: req.body.name, description: req.body.desc,price: parseInt(req.body.price), pizza_img: filepath,res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type });
+    let ob1 = new Pizza({ pizza_id: parseInt(newpizzaid), pizza_name: req.body.name, description: req.body.desc, price: parseInt(req.body.price), pizza_img: filepath, res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type });
     let result2 = await ob1.save();
     res.send(result2);
 })
 
 
 
-app.get("/fetch_pizza_detail/:rid",async function(req,res){
-    let result = await Pizza.find({res_id: parseInt(req.params.rid)});
+app.get("/fetch_pizza_detail/:rid", async function (req, res) {
+    console.log("Frontend se aayi Restaurant ID:", req.params.rid);
+    let result = await Pizza.find({ res_id: parseInt(req.params.rid) });
+    console.log("Database me mile Pizzas:", result.length);
     res.send(result);
 })
 
-app.delete("/delete_pizza/:pid",async function(req,res){
-    let result = await Pizza.deleteOne({pizza_id: parseInt(req.params.pid)});
+app.delete("/delete_pizza/:pid", async function (req, res) {
+    let result = await Pizza.deleteOne({ pizza_id: parseInt(req.params.pid) });
     res.send(result);
 })
 
-app.get("/fetch_single_pizza_detail/:pid",async function(req,res){
-    let result = await Pizza.findOne({pizza_id: parseInt(req.params.pid)});
+app.get("/fetch_single_pizza_detail/:pid", async function (req, res) {
+    let result = await Pizza.findOne({ pizza_id: parseInt(req.params.pid) });
     res.send(result);
 })
 
+app.get("/fetch_rest_orders/:rid", async function (req, res) {
+    // Specific restaurant ke orders fetch karne ka route
+    let result = await Order.find({ res_id: parseInt(req.params.rid) });
+    res.send(result);
+})
 app.post("/rest_update_pizza_withimg", upload.single('image'), async function (req, res) {
-    let result2 = await Pizza.updateOne({ pizza_id: parseInt(req.body.pizzaid)},{$set:{ pizza_name: req.body.name, description: req.body.desc,price: parseInt(req.body.price), pizza_img: filepath,res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type }});
+    let result2 = await Pizza.updateOne({ pizza_id: parseInt(req.body.pizzaid) }, { $set: { pizza_name: req.body.name, description: req.body.desc, price: parseInt(req.body.price), pizza_img: filepath, res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type } });
     res.send(result2);
 })
 
 app.post("/rest_update_pizza", async function (req, res) {
-    let result2 = await Pizza.updateOne({ pizza_id: parseInt(req.body.pizzaid)},{$set:{ pizza_name: req.body.name, description: req.body.desc,price: parseInt(req.body.price),res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type }});
+    let result2 = await Pizza.updateOne({ pizza_id: parseInt(req.body.pizzaid) }, { $set: { pizza_name: req.body.name, description: req.body.desc, price: parseInt(req.body.price), res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type } });
     res.send(result2);
 })
 
+app.post("/update_order_status", async function (req, res) {
+    let result = await Order.updateOne({ order_id: parseInt(req.body.order_id) }, { $set: { status: req.body.status } });
+    res.send(result);
+})
 
-app.listen(3000,"localhost",function(){
+
+app.listen(3000, function () {
     console.log("Server Started At Port No 3000");
 })

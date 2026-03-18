@@ -1,0 +1,47 @@
+<main>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h1 style="color: #ffc400;">NEW CUSTOMER ORDERS</h1>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12 mt-3">
+                @if(orders.length == 0){
+                    <h2 class="text-center text-muted">No New Orders Found</h2>
+                }@else{
+                    <table class="table table-bordered table-striped text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer ID</th>
+                                <th>Items Details (Pizza - Qty)</th>
+                                <th>Total Amount</th>
+                                <th>Delivery Address</th>
+                                <th>Contact No</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(order of orders; track order.order_id){
+                                <tr>
+                                    <td><strong>#{{order.order_id}}</strong></td>
+                                    <td>{{order.customer_id}}</td>
+                                    <td class="text-start">
+                                        <ul class="mb-0">
+                                            @for(item of order.items; track item.pizza_id){
+                                                <li>{{item.pizza_name}} (Qty: {{item.qty}})</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td class="text-success fw-bold">₹{{order.total_amount}}</td>
+                                    <td>{{order.delivery_address}}</td>
+                                    <td>{{order.del_moblie_no}}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</main>

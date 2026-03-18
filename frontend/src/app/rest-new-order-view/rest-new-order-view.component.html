@@ -1,0 +1,69 @@
+<main>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h1 style="color: #ffc400;">NEW CUSTOMER ORDERS</h1>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12 mt-3">
+                @if(orders.length == 0){
+                    <h2 class="text-center text-muted">No New Orders Found</h2>
+                }@else{
+                    <table class="table table-bordered table-striped text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer ID</th>
+                                <th>Items Details (Pizza - Qty)</th>
+                                <th>Total Amount</th>
+                                <th>Delivery Address</th>
+                                <th>Contact No</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(order of orders; track order.order_id){
+                                <tr>
+                                    <td><strong>#{{order.order_id}}</strong></td>
+                                    <td>{{order.customer_id}}</td>
+                                    <td class="text-start">
+                                        <ul class="mb-0">
+                                            @for(item of order.items; track item.pizza_id){
+                                                <li>{{item.pizza_name}} (Qty: {{item.qty}})</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td class="text-success fw-bold">₹{{order.total_amount}}</td>
+                                    <td>{{order.delivery_address}}</td>
+                                    <td>{{order.del_moblie_no}}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="{
+                                            'bg-secondary': order.status === 'Pending',
+                                            'bg-info': order.status === 'Accepted',
+                                            'bg-warning': order.status === 'Cooking',
+                                            'bg-primary': order.status === 'Out for Delivery',
+                                            'bg-success': order.status === 'Delivered',
+                                            'bg-danger': order.status === 'Cancelled'
+                                        }">{{order.status}}</span>
+                                    </td>
+                                    <td>
+                                        <select class="form-select form-select-sm" (change)="updateStatus(order.order_id, statusSelect.value)" #statusSelect>
+                                            <option [selected]="order.status === 'Pending'" value="Pending">Pending</option>
+                                            <option [selected]="order.status === 'Accepted'" value="Accepted">Accepted</option>
+                                            <option [selected]="order.status === 'Cooking'" value="Cooking">Cooking</option>
+                                            <option [selected]="order.status === 'Out for Delivery'" value="Out for Delivery">Out for Delivery</option>
+                                            <option [selected]="order.status === 'Delivered'" value="Delivered">Delivered</option>
+                                            <option [selected]="order.status === 'Cancelled'" value="Cancelled">Cancelled</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</main>

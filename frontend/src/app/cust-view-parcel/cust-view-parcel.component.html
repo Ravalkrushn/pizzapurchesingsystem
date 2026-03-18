@@ -39,12 +39,25 @@
                                             <td class="fw-bold text-success">₹{{order.total_amount}}</td>
                                             <td>
                                                 <span class="badge" [ngClass]="{
-                                                    'bg-info': order.status === 'Pending',
-                                                    'bg-warning': order.status === 'Accepted',
+                                                    'bg-secondary': order.status === 'Pending',
+                                                    'bg-info': order.status === 'Accepted',
+                                                    'bg-warning': order.status === 'Cooking',
                                                     'bg-primary': order.status === 'Out for Delivery',
                                                     'bg-success': order.status === 'Delivered',
                                                     'bg-danger': order.status === 'Cancelled'
                                                 }">{{order.status}}</span>
+                                                
+                                                <!-- Simple Tracking Bar -->
+                                                <div class="mt-2" style="width: 100px;">
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-success" role="progressbar" 
+                                                            [style.width]="order.status === 'Delivered' ? '100%' : 
+                                                                           order.status === 'Out for Delivery' ? '75%' : 
+                                                                           order.status === 'Cooking' ? '50%' : 
+                                                                           order.status === 'Accepted' ? '25%' : '10%'">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td class="pe-4 text-end">
                                                 <button class="btn btn-outline-warning btn-sm rounded-pill px-3">

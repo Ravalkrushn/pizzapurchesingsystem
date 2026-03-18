@@ -26,6 +26,7 @@ constructor(private router:Router,private http:HttpClient,public authservice:Aut
     this.http.post("http://localhost:3000/login_user",rdata)
       .subscribe({
         next:(response:any)=>{
+          console.log("Login Response from Backend: ", response);
           if(response.message=="Admin Login Successfully"){
             localStorage.setItem("adminemail","admin");
             this.authservice.adminloggedin= true;
@@ -47,7 +48,8 @@ constructor(private router:Router,private http:HttpClient,public authservice:Aut
           }
         },
         error:(err)=>{
-          console.log("Error In Restaurant Registration: ",err);
+          console.log("Error In Login: ", err);
+          alert("Server se connect nahi ho pa raha hai. F12 daba kar Console check karein.");
         }
       })
   }

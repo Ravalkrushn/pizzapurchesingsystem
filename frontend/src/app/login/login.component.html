@@ -21,7 +21,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Enter Password</label>
-                        <input type="password" class="form-control" name="txtpwd" ngModel #txtpwd="ngModel">
+                        <div class="input-group">
+                            <input type="password" #pwdInput class="form-control" name="txtpwd" ngModel #txtpwd="ngModel">
+                            <button class="btn btn-outline-secondary" type="button" (click)="pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password'">
+                                {{ pwdInput.type === 'password' ? '👁️' : '🙈' }}
+                            </button>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn" style="background-color: #ffe57f;">LOGIN</button>
