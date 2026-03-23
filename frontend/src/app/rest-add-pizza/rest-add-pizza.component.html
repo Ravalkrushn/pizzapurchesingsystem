@@ -26,7 +26,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Select Category</label>
-                        <select class="form-select" name="txtcatid" ngModel #txtcatid="ngModel" required>
+                        <select class="form-select" name="txtcatid" ngModel #txtcatid="ngModel" required (ngModelChange)="onCategoryChange($event)">
                             <option value="" disabled selected>Select Category</option>
                             @for(cat of categories; track cat.cat_id) {
                                 <option [value]="cat.cat_id">{{cat.cat_name}}</option>
@@ -40,11 +40,11 @@
                     <div class="mb-3">
                         <label class="form-label d-block">Pizza Type</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="txttype" id="pveg" value="Veg" ngModel required>
+                            <input class="form-check-input" type="radio" name="txttype" id="pveg" value="Veg" [(ngModel)]="selectedType" required>
                             <label class="form-check-label" for="pveg text-success">Veg</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="txttype" id="pnonveg" value="Non-Veg" ngModel required>
+                            <input class="form-check-input" type="radio" name="txttype" id="pnonveg" value="Non-Veg" [(ngModel)]="selectedType" required>
                             <label class="form-check-label" for="pnonveg text-danger">Non-Veg</label>
                         </div>
                     </div>

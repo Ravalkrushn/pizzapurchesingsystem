@@ -4,83 +4,140 @@
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <div class="card-header bg-gradient bg-warning text-white p-4">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="mb-0 fw-bold"><i class="bi bi-box-seam me-2"></i> My Parcels</h2>
-                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">{{orders.length}} Orders</span>
+                        <h2 class="mb-0 fw-bold"><i class="bi bi-box-seam me-2"></i> My Orders</h2>
+                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">{{orders.length}} Total</span>
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    @if(orders.length > 0) {
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="ps-4">Order ID</th>
-                                        <th>Date</th>
-                                        <th>Parcel ID</th>
-                                        <th>Address</th>
-                                        <th>Mobile</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th class="pe-4 text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for(order of orders; track order.order_id) {
-                                        <tr>
-                                            <td class="ps-4 fw-bold text-primary">#{{order.order_id}}</td>
-                                            <td>{{order.order_date | date:'mediumDate'}}</td>
-                                            <td><span class="badge bg-secondary rounded-pill">{{order.parcel_id}}</span></td>
-                                            <td>
-                                                <div class="text-truncate" style="max-width: 200px;" [title]="order.del_address || order.delivery_address">
-                                                    {{order.del_address || order.delivery_address}}
+                    <!-- Tabs for Active vs Past -->
+                    <ul class="nav nav-tabs nav-fill bg-light" id="orderTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold text-dark border-0" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">Active Parcels ({{activeOrders.length}})</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold text-dark border-0" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">Order History ({{pastOrders.length}})</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="orderTabsContent">
+                        <!-- ACTIVE ORDERS TAB -->
+                        <div class="tab-pane fade show active p-3" id="active" role="tabpanel">
+                            @if(activeOrders.length > 0) {
+                                @for(order of activeOrders; track order.order_id) {
+                                    <div class="card mb-3 border-start border-4 border-warning shadow-sm">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-2">
+                                                    <div class="fw-bold text-primary mb-1">Order #{{order.order_id}}</div>
+                                                    <div class="small text-muted">{{order.order_date | date:'shortTime'}}</div>
                                                 </div>
-                                            </td>
-                                            <td>{{order.del_moblie_no || 'N/A'}}</td>
-                                            <td class="fw-bold text-success">₹{{order.total_amount}}</td>
-                                            <td>
-                                                <span class="badge" [ngClass]="{
-                                                    'bg-secondary': order.status === 'Pending',
-                                                    'bg-info': order.status === 'Accepted',
-                                                    'bg-warning': order.status === 'Cooking',
-                                                    'bg-primary': order.status === 'Out for Delivery',
-                                                    'bg-success': order.status === 'Delivered',
-                                                    'bg-danger': order.status === 'Cancelled'
-                                                }">{{order.status}}</span>
-                                                
-                                                <!-- Simple Tracking Bar -->
-                                                <div class="mt-2" style="width: 100px;">
-                                                    <div class="progress" style="height: 5px;">
-                                                        <div class="progress-bar bg-success" role="progressbar" 
-                                                            [style.width]="order.status === 'Delivered' ? '100%' : 
-                                                                           order.status === 'Out for Delivery' ? '75%' : 
+                                                <div class="col-md-3">
+                                                    <div class="small text-muted mb-1">Status</div>
+                                                    <span class="badge" [ngClass]="{
+                                                        'bg-secondary': order.status === 'Pending',
+                                                        'bg-info': order.status === 'Accepted',
+                                                        'bg-warning': order.status === 'Cooking',
+                                                        'bg-primary': order.status === 'Out for Delivery'
+                                                    }">{{order.status}}</span>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div class="progress mb-2" style="height: 10px;">
+                                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" 
+                                                            [style.width]="order.status === 'Out for Delivery' ? '75%' : 
                                                                            order.status === 'Cooking' ? '50%' : 
                                                                            order.status === 'Accepted' ? '25%' : '10%'">
                                                         </div>
                                                     </div>
+                                                    <div class="small text-muted d-flex justify-content-between">
+                                                        <span>Placed</span>
+                                                        <span>Preparing</span>
+                                                        <span>Out!</span>
+                                                    </div>
                                                 </div>
-                                            </td>
-                                            <td class="pe-4 text-end">
-                                                <button class="btn btn-outline-warning btn-sm rounded-pill px-3">
-                                                    Track
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                                <div class="col-md-2 text-end">
+                                                    @if(order.status === 'Pending') {
+                                                        <button class="btn btn-outline-danger btn-sm rounded-pill" (click)="cancelOrder(order.order_id)">Cancel</button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            } @else {
+                                <div class="text-center py-5">
+                                    <h5 class="text-muted">No active orders right now.</h5>
+                                    <button class="btn btn-warning mt-2 rounded-pill shadow-sm" routerLink="/cust_select_rest">Order Now</button>
+                                </div>
+                            }
                         </div>
-                    } @else {
-                        <div class="text-center py-5">
-                            <div class="mb-4">
-                                <i class="bi bi-box-seam text-muted" style="font-size: 5rem;"></i>
-                            </div>
-                            <h3 class="text-muted">No parcels found!</h3>
-                            <p class="text-secondary">You haven't placed any orders yet.</p>
-                            <button class="btn btn-warning mt-3 rounded-pill px-4 py-2 fw-bold text-white shadow" routerLink="/cust_select_rest">
-                                Start Shopping
-                            </button>
+
+                        <!-- PAST ORDERS TAB -->
+                        <div class="tab-pane fade p-3" id="history" role="tabpanel">
+                            @if(pastOrders.length > 0) {
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Rating</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for(order of pastOrders; track order.order_id) {
+                                                <tr>
+                                                    <td class="fw-bold">#{{order.order_id}}</td>
+                                                    <td>{{order.order_date | date:'mediumDate'}}</td>
+                                                    <td class="text-success fw-bold">₹{{order.total_amount}}</td>
+                                                    <td>
+                                                        <span class="badge" [ngClass]="order.status === 'Delivered' ? 'bg-success' : 'bg-danger'">
+                                                            {{order.status}}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        @if(order.status === 'Delivered') {
+                                                            @if(order.rating > 0) {
+                                                                <span class="text-warning">
+                                                                    @for(i of [1,2,3,4,5]; track i) {
+                                                                        <i class="bi" [ngClass]="i <= order.rating ? 'bi-star-fill' : 'bi-star'"></i>
+                                                                    }
+                                                                </span>
+                                                            } @else {
+                                                                <div class="rating-stars">
+                                                                    <select class="form-select form-select-sm border-0 bg-light" #rateVal (change)="submitRating(order.order_id, +rateVal.value)">
+                                                                        <option value="0">Rate Us</option>
+                                                                        <option value="5">5 ⭐ High</option>
+                                                                        <option value="4">4 ⭐</option>
+                                                                        <option value="3">3 ⭐</option>
+                                                                        <option value="2">2 ⭐</option>
+                                                                        <option value="1">1 ⭐ Low</option>
+                                                                    </select>
+                                                                </div>
+                                                            }
+                                                        } @else {
+                                                            -
+                                                        }
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" (click)="reorder(order)">
+                                                            <i class="bi bi-arrow-repeat"></i> Re-Order
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            } @else {
+                                <div class="text-center py-5">
+                                    <h5 class="text-muted">No history found.</h5>
+                                </div>
+                            }
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
         </div>

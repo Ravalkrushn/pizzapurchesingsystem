@@ -1,47 +1,94 @@
 <main>
-
-    <div class="container">
-        <div class="row mt-5">
+    <div class="container-fluid px-4 mt-5">
+        <div class="row mb-4">
             <div class="col-md-12 text-center">
-                <h1 style="color: #ffc400;">VIEW RESTAURANT DETAIL</h1>
+                <h1 class="display-5 font-weight-bold" style="color: #ffc400; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                    <i class="bi bi-shop mr-2"></i> VIEW RESTAURANT DETAIL
+                </h1>
+                <p class="text-muted">Manage your registered restaurants and their information</p>
             </div>
-
         </div>
-        <div class="row mt-5">
-          
-            <div class="col-md-12 ">
-               @if(resdetail.length == 0){
-                    <h1>No Restautrant Detail Found</h1>
-               }@else{
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>RESTAURANT ID</th>
-                                <th>RESTAURANT NAME</th>
-                                <th>ADDRESS</th>
-                                <th>CITY</th>
-                                <th>MOBILE NO</th>
-                                <th>EMAIL ID</th>
-                                <th>UPDATE</th>
-                                <th>DELETE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for(res of resdetail; track res.res_id){
-                                <tr>
-                                    <td>{{res.res_id}}</td>
-                                    <td>{{res.res_name}}</td>
-                                    <td>{{res.address}}</td>
-                                    <td>{{res.city}}</td>
-                                    <td>{{res.mobile_no}}</td>
-                                    <td>{{res.email_id}}</td>
-                                    <td><a class="btn" style="background-color: #ffe57f;" routerLink="/admin_update_restaurant/{{res.res_id}}">UPDATE</a></td>
-                                    <td><a class="btn" style="background-color: #ffe57f;" (click)="ondelete(res.res_id)">DELETE</a></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-               }
+
+        <div class="row">
+            <div class="col-md-12">
+                @if(resdetail.length == 0){
+                    <div class="alert alert-info text-center p-5 shadow-sm">
+                        <i class="bi bi-info-circle display-4 d-block mb-3"></i>
+                        <h3>No Restaurant Details Found</h3>
+                    </div>
+                }@else{
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-dark text-white text-center">
+                                        <tr>
+                                            <th class="py-3">RESTAURANT ID</th>
+                                            <th class="py-3">NAME</th>
+                                            <th class="py-3">ADDRESS</th>
+                                            <th class="py-3">CITY</th>
+                                            <th class="py-3">MOBILE NO</th>
+                                            <th class="py-3">EMAIL ID</th>
+                                            <th class="py-3">UPDATE</th>
+                                            <th class="py-3">DELETE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @for(res of paginatedResDetail; track res.res_id){
+                                            <tr>
+                                                <td class="font-weight-bold">#{{res.res_id}}</td>
+                                                <td>{{res.res_name}}</td>
+                                                <td class="text-muted">{{res.address}}</td>
+                                                <td><span class="badge bg-light text-dark shadow-sm">{{res.city}}</span></td>
+                                                <td>{{res.mobile_no}}</td>
+                                                <td><a href="mailto:{{res.email_id}}" class="text-decoration-none">{{res.email_id}}</a></td>
+                                                <td>
+                                                    <a class="btn btn-sm shadow-sm" style="background-color: #ffe57f; font-weight: 600;" routerLink="/admin_update_restaurant/{{res.res_id}}">
+                                                        <i class="bi bi-pencil-square mr-1"></i> UPDATE
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-danger shadow-sm" style="font-weight: 600;" (click)="ondelete(res.res_id)">
+                                                        <i class="bi bi-trash mr-1"></i> DELETE
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Pagination Controls -->
+                        <div class="card-footer bg-white border-top-0 py-3 d-flex justify-content-between align-items-center" *ngIf="resdetail.length > itemsPerPage">
+                            <div class="text-muted small">
+                                Showing <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong> to 
+                                <strong>{{ Math.min(currentPage * itemsPerPage, resdetail.length) }}</strong> of 
+                                <strong>{{ resdetail.length }}</strong> restaurants
+                            </div>
+                            <nav aria-label="Restaurant search results navigation">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                        <button class="page-link shadow-none d-flex align-items-center" (click)="prevPage()" aria-label="Previous">
+                                            <mat-icon class="mr-1">chevron_left</mat-icon> Previous
+                                        </button>
+                                    </li>
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ currentPage }}</span>
+                                    </li>
+                                    <li class="page-item disabled" *ngIf="totalPages > 1">
+                                        <span class="page-link">of {{ totalPages }}</span>
+                                    </li>
+                                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                        <button class="page-link shadow-none d-flex align-items-center" (click)="nextPage()" aria-label="Next">
+                                            Next <mat-icon class="ml-1">chevron_right</mat-icon>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>

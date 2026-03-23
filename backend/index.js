@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -87,6 +88,16 @@ app.post("/add_category", async function (req, res) {
 
 app.get("/fetch_categories", async function (req, res) {
     let result = await Category.find();
+    res.send(result);
+})
+
+app.delete("/delete_category/:cid", async function (req, res) {
+    let result = await Category.deleteOne({ cat_id: parseInt(req.params.cid) });
+    res.send(result);
+})
+
+app.post("/update_category", async function (req, res) {
+    let result = await Category.updateOne({ cat_id: parseInt(req.body.id) }, { $set: { cat_name: req.body.name, cat_type: req.body.type } });
     res.send(result);
 })
 
@@ -259,6 +270,89 @@ app.post("/update_order_status", async function (req, res) {
     res.send(result);
 })
 
+app.post("/cancel_order", async function (req, res) {
+    let result = await Order.updateOne(
+        { order_id: parseInt(req.body.order_id), status: "Pending" }, 
+        { $set: { status: "Cancelled" } }
+    );
+    res.send(result);
+})
+
+app.post("/submit_rating", async function (req, res) {
+    let result = await Order.updateOne(
+        { order_id: parseInt(req.body.order_id) }, 
+        { $set: { rating: parseInt(req.body.rating) } }
+    );
+    res.send(result);
+})
+
+app.get("/fetch_all_orders", async function (req, res) {
+    let orders = await Order.find();
+    let enrichedOrders = await Promise.all(orders.map(async (order) => {
+        let orderObj = order.toObject();
+        let restaurant = await Restaurant.findOne({ res_id: order.res_id });
+        let customer = await Customer.findOne({ customer_id: order.customer_id });
+        
+        orderObj.res_name = restaurant ? restaurant.res_name : "Unknown Restaurant";
+        orderObj.customer_name = customer ? customer.customer_name : "Unknown Customer";
+        
+        // Count items
+        orderObj.item_count = order.items.length;
+        
+        return orderObj;
+    }));
+    res.send(enrichedOrders);
+})
+
+app.get("/fetch_all_bills", async function (req, res) {
+    // Orders with status 'Delivered' are considered bills for reporting
+    let bills = await Order.find({ status: "Delivered" });
+    let enrichedBills = await Promise.all(bills.map(async (bill) => {
+        let billObj = bill.toObject();
+        let restaurant = await Restaurant.findOne({ res_id: bill.res_id });
+        let customer = await Customer.findOne({ customer_id: bill.customer_id });
+        
+        billObj.res_name = restaurant ? restaurant.res_name : "Unknown Restaurant";
+        billObj.customer_name = customer ? customer.customer_name : "Unknown Customer";
+        
+        // Since schema doesn't have bill_date, we use order_date or current date
+        // For existing front-end compatibility, we'll map order_date to bill_date
+        billObj.bill_date = bill.order_date;
+        
+        return billObj;
+    }));
+    res.send(enrichedBills);
+})
+
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+app.post('/create-checkout-session', async (req, res) => {
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'inr',
+                        product_data: {
+                            name: 'Pizza Order',
+                        },
+                        unit_amount: req.body.amount * 100, // Amount in paise
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            success_url: 'http://localhost:4200/cust_cart?payment_success=true',
+            cancel_url: 'http://localhost:4200/cust_cart',
+        });
+        res.json({ url: session.url });
+    } catch (e) {
+        console.error("Stripe Error:", e);
+        res.status(500).json({ error: e.message });
+    }
+});
 
 app.listen(3000, function () {
     console.log("Server Started At Port No 3000");

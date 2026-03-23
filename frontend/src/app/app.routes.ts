@@ -16,11 +16,13 @@ import { AdminAddCategoryComponent } from './admin-add-category/admin-add-catego
 import { CustViewPizzaComponent } from './cust-view-pizza/cust-view-pizza.component';
 import { CustCartComponent } from './cust-cart/cust-cart.component';
 import { CustViewParcelComponent } from './cust-view-parcel/cust-view-parcel.component';
-
 import { CustSelectRestComponent } from './cust-select-rest/cust-select-rest.component';
 import { RestNewOrderViewComponent } from './rest-new-order-view/rest-new-order-view.component';
-
-
+import { adminGuard, restGuard, custGuard } from './auth.guard';
+import { AdminReportRestaurantComponent } from './admin-report-restaurant/admin-report-restaurant.component';
+import { AdminReportCustomerComponent } from './admin-report-customer/admin-report-customer.component';
+import { AdminReportOrderComponent } from './admin-report-order/admin-report-order.component';
+import { AdminReportBillComponent } from './admin-report-bill/admin-report-bill.component';
 
 export const routes: Routes = [
     {path:"",component: HomeComponent},
@@ -29,18 +31,30 @@ export const routes: Routes = [
     {path:"rest_regis",component: RestaurantRegisComponent},
     {path:"cust_regis",component: CustRegisComponent},
     {path:"login",component: LoginComponent},
-    {path:"admin_view_restaurant",component: AdminViewRestaurantComponent},
-    {path:"admin_update_restaurant/:rid",component: AdminUpdateRestaurantComponent},
-    {path:"admin_view_customer",component: AdminViewCustomerComponent},
-    {path:"admin_update_customer/:cid",component: AdminUpdateCustomerComponent},
-    {path:"rest_view_pizza",component: RestViewPizzaComponent},
-    {path:"rest_add_pizza",component: RestAddPizzaComponent},
-    {path:"rest_update_pizza/:pid",component: RestUpdatePizzaComponent},
-    {path:"cust_select_rest",component: CustSelectRestComponent},
-    {path:"admin_add_category",component: AdminAddCategoryComponent},
-    {path:"cust_view_pizza",component: CustViewPizzaComponent},
-    {path:"cust_cart",component: CustCartComponent},
-    {path:"cust_view_parcel",component: CustViewParcelComponent},
-    {path:"cust_view_all_orders",component: CustViewParcelComponent},
-    {path:"rest_new_order_view",component: RestNewOrderViewComponent},
+    
+    // Admin Routes
+    {path:"admin_view_restaurant",component: AdminViewRestaurantComponent, canActivate: [adminGuard]},
+    {path:"admin_update_restaurant/:rid",component: AdminUpdateRestaurantComponent, canActivate: [adminGuard]},
+    {path:"admin_view_customer",component: AdminViewCustomerComponent, canActivate: [adminGuard]},
+    {path:"admin_update_customer/:cid",component: AdminUpdateCustomerComponent, canActivate: [adminGuard]},
+    {path:"admin_add_category",component: AdminAddCategoryComponent, canActivate: [adminGuard]},
+    
+    // Admin Reports
+    {path:"admin_report_restaurant",component: AdminReportRestaurantComponent, canActivate: [adminGuard]},
+    {path:"admin_report_customer",component: AdminReportCustomerComponent, canActivate: [adminGuard]},
+    {path:"admin_report_order",component: AdminReportOrderComponent, canActivate: [adminGuard]},
+    {path:"admin_report_bill",component: AdminReportBillComponent, canActivate: [adminGuard]},
+
+    // Restaurant Routes
+    {path:"rest_view_pizza",component: RestViewPizzaComponent, canActivate: [restGuard]},
+    {path:"rest_add_pizza",component: RestAddPizzaComponent, canActivate: [restGuard]},
+    {path:"rest_update_pizza/:pid",component: RestUpdatePizzaComponent, canActivate: [restGuard]},
+    {path:"rest_new_order_view",component: RestNewOrderViewComponent, canActivate: [restGuard]},
+
+    // Customer Routes
+    {path:"cust_select_rest",component: CustSelectRestComponent, canActivate: [custGuard]},
+    {path:"cust_view_pizza",component: CustViewPizzaComponent, canActivate: [custGuard]},
+    {path:"cust_cart",component: CustCartComponent, canActivate: [custGuard]},
+    {path:"cust_view_parcel",component: CustViewParcelComponent, canActivate: [custGuard]},
+    {path:"cust_view_all_orders",component: CustViewParcelComponent, canActivate: [custGuard]},
 ];

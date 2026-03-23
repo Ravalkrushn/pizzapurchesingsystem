@@ -16,6 +16,7 @@ fileTypeError: boolean = false;
   txtimg: File | null = null;
   restid:any;
   categories: any[] = [];
+  selectedType: string = '';
 
   constructor(public router: Router, public http: HttpClient) { }
   
@@ -26,6 +27,13 @@ fileTypeError: boolean = false;
     }, (err) => {
       console.error("Error fetching categories:", err);
     });
+  }
+
+  onCategoryChange(catId: any) {
+    const selectedCat = this.categories.find(c => c.cat_id == catId);
+    if (selectedCat) {
+      this.selectedType = selectedCat.cat_type;
+    }
   }
 
   onFileSelected(event: Event): void {

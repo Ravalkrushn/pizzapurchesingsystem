@@ -18,7 +18,8 @@ const orderSchema = new mongoose.Schema({
     del_address: String,
     delivery_address: String,
     del_moblie_no: String,
-    status: { type: String, default: "Pending" }
+    status: { type: String, default: "Pending" },
+    rating: { type: Number, default: 0 }
 }, {
     versionKey: false
 });

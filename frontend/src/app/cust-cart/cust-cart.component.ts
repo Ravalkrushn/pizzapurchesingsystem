@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-cust-cart',
@@ -12,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './cust-cart.component.css'
 })
 export class CustCartComponent implements OnInit {
+  paymentMode: string = 'cod';
   cartItems: any[] = [];
   totalAmount: number = 0;
   customerDetail: any = null;
@@ -21,7 +22,7 @@ export class CustCartComponent implements OnInit {
   
   custid: any;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.custid = localStorage.getItem("custid");
@@ -30,8 +31,23 @@ export class CustCartComponent implements OnInit {
       return;
     }
     
-    this.loadCart();
-    this.fetchCustomerDetail();
+    // Check if returning from Stripe Checkout
+    this.route.queryParams.subscribe(params => {
+      if (params['payment_success'] === 'true') {
+        const tempDetails = JSON.parse(localStorage.getItem("temp_order_details") || "{}");
+        if (tempDetails.deliveryAddress) {
+          this.deliveryAddress = tempDetails.deliveryAddress;
+          this.deliveryMobileNo = tempDetails.deliveryMobileNo;
+          this.cartItems = JSON.parse(localStorage.getItem("pizza_cart") || "[]");
+          this.calculateTotal();
+          // Auto submit the order since payment is done
+          this.submitOrderToBackend();
+        }
+      } else {
+        this.loadCart();
+        this.fetchCustomerDetail();
+      }
+    });
   }
 
   loadCart() {
@@ -84,6 +100,30 @@ export class CustCartComponent implements OnInit {
       return;
     }
 
+    if (this.paymentMode === 'online') {
+      // Temporarily save details before leaving the site for Stripe
+      localStorage.setItem("temp_order_details", JSON.stringify({
+        deliveryAddress: this.deliveryAddress,
+        deliveryMobileNo: this.deliveryMobileNo
+      }));
+
+      // Call backend to create checkout session
+      this.http.post("http://localhost:3000/create-checkout-session", { amount: this.totalAmount })
+        .subscribe((res: any) => {
+          if (res.url) {
+            window.location.href = res.url; // Redirects browser to Stripe Checkout page
+          } else {
+            alert("Error: Stripe URL not received");
+          }
+        }, (err) => {
+          alert("Server error connecting to Stripe. Did you paste your Secret Key in backend?");
+        });
+    } else {
+      this.submitOrderToBackend(); // COD
+    }
+  }
+
+  submitOrderToBackend() {
     const orderData = {
       customer_id: this.custid,
       parcel_id: this.cartItems[0].res_id, // Using res_id as parcel_id for now as per schema
@@ -104,6 +144,9 @@ export class CustCartComponent implements OnInit {
       if (res.order_id) {
         alert("Order Placed Successfully! Order ID: " + res.order_id);
         localStorage.removeItem("pizza_cart");
+        localStorage.removeItem("temp_order_details"); // Clean up
+        
+        // Remove query parameters from URL and redirect to parcel view
         this.router.navigate(['/cust_view_parcel']);
       } else {
         alert("Error placing order. Please try again.");

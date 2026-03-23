@@ -1,6 +1,63 @@
 .card {
-    border-radius: 15px;
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.card-header {
-    border-radius: 15px 15px 0 0 !important;
+
+.card:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1) !important;
+}
+
+/* Badge Styles */
+.bg-success-light {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.bg-danger-light {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.badge {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+}
+
+/* Pagination Customizations */
+.pagination .page-link {
+    border: none;
+    color: #495057;
+    margin: 0 4px;
+    border-radius: 6px;
+    padding: 8px 16px;
+    transition: background 0.2s;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #343a40 !important;
+    color: white;
+}
+
+.page-link:hover {
+    background-color: #f8f9fa;
+}
+
+/* Form refinement */
+.font-weight-bold {
+    font-weight: 600 !important;
+}
+
+.btn-check:checked + .btn-outline-success {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.btn-check:checked + .btn-outline-danger {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.bi-dot {
+    font-size: 1.5rem;
+    vertical-align: middle;
+    line-height: 0;
 }

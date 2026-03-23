@@ -1,0 +1,112 @@
+<div class="container-fluid mt-5 mb-5 px-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="display-4 font-weight-bold" style="color: #ffc400; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">Order Detail Report</h2>
+            <p class="lead text-muted">Track and analyze all pizza orders across restaurants.</p>
+        </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="row justify-content-center filter-card">
+        <div class="col-md-3">
+            <div class="form-group mb-0">
+                <label class="form-label font-weight-bold" style="color: #555;">Filter by Status</label>
+                <select class="form-select" [(ngModel)]="filterStatus">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Ready">Ready</option>
+                    <option value="Out for Delivery">Out for Delivery</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group mb-0">
+                <label class="form-label font-weight-bold" style="color: #555;">From Date</label>
+                <input type="date" class="form-control" [(ngModel)]="filterFromDate">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group mb-0">
+                <label class="form-label font-weight-bold" style="color: #555;">To Date</label>
+                <input type="date" class="form-control" [(ngModel)]="filterToDate">
+            </div>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-warning w-100 font-weight-bold shadow-sm" (click)="generateReport()" style="background-color: #ffc400; border: none; padding: 10px 20px;">
+                <i class="bi bi-file-earmark-text mr-2"></i> GENERATE
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Area -->
+    <div class="row report-paper shadow-lg rounded" *ngIf="showReport">
+        <div class="watermark-container">
+            <div class="watermark-text">PIZZERIA</div>
+        </div>
+        
+        <div class="col-12 position-relative" style="z-index: 2;">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-4">
+                <div>
+                    <h3 class="mb-0 text-dark">System-wide Order Inventory Report</h3>
+                    <p class="text-muted mb-0">Report Date: {{ today | date:'medium' }}</p>
+                    <p class="text-muted mb-0" *ngIf="filterStatus">Filtered Status: <strong>{{ filterStatus }}</strong></p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-dark btn-print" (click)="printReport()">
+                        <i class="bi bi-printer mr-2"></i> Print Report
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="report-table table border shadow-sm">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Restaurant</th>
+                            <th>Customer</th>
+                            <th>Items Count</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let order of filteredData">
+                            <td class="font-weight-bold">#ORD-{{ order.order_id }}</td>
+                            <td>{{ order.res_name }}</td>
+                            <td>{{ order.customer_name }}</td>
+                            <td>{{ order.item_count || 'N/A' }}</td>
+                            <td class="text-success font-weight-bold">₹{{ order.total_amount }}</td>
+                            <td>
+                                <span class="badge" 
+                                      [ngClass]="{
+                                          'bg-warning': order.status === 'Pending',
+                                          'bg-info': order.status === 'Accepted' || order.status === 'Ready',
+                                          'bg-primary': order.status === 'Out for Delivery',
+                                          'bg-success': order.status === 'Delivered',
+                                          'bg-danger': order.status === 'Cancelled'
+                                      }">{{ order.status }}</span>
+                            </td>
+                            <td>{{ order.order_date | date:'shortDate' }}</td>
+                        </tr>
+                        <tr *ngIf="filteredData.length === 0">
+                            <td colspan="7" class="text-center py-5">
+                                <i class="bi bi-cart-x display-4 text-muted mb-3 d-block"></i>
+                                <h4 class="text-muted">No orders found matching the filter.</h4>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-5 text-right border-top pt-4">
+                <p class="text-muted italic">Total Orders: <strong>{{ filteredData.length }}</strong></p>
+                <p class="text-muted small">Generated by Admin Panel | Pizzeria Purchasing System</p>
+            </div>
+        </div>
+    </div>
+</div>
