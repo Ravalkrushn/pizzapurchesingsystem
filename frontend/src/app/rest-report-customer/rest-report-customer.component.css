@@ -1,0 +1,29 @@
+/* Basic styles for the restaurant report cards */
+.filter-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
+
+.report-table thead {
+    background-color: #ffc400;
+}
+
+.report-table th {
+    color: #333;
+    font-weight: 700;
+}
+
+.report-paper {
+    background: white;
+    padding: 40px;
+    position: relative;
+    border-top: 5px solid #ffc400;
+}
+
+@media print {
+    .btn-print, .filter-card, .navbar {
+        display: none !important;
+    }
+}

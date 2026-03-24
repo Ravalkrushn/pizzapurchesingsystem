@@ -1,0 +1,18 @@
+/* Styles for restaurant order report */
+.filter-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.report-paper {
+    background: white;
+    padding: 40px;
+    border-top: 5px solid #ffc400;
+}
+
+@media print {
+    .btn-print, .filter-card, .navbar {
+        display: none !important;
+    }
+}

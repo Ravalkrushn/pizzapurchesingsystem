@@ -325,6 +325,59 @@ app.get("/fetch_rest_orders/:rid", async function (req, res) {
     let result = await Order.find({ res_id: parseInt(req.params.rid) });
     res.send(result);
 })
+
+app.get("/fetch_rest_customers/:rid", async function (req, res) {
+    try {
+        const rid = parseInt(req.params.rid);
+        // Find unique customer IDs that placed orders with this restaurant
+        const orderCustomers = await Order.distinct("customer_id", { res_id: rid });
+        
+        // Fetch full details for these customers
+        const customers = await Customer.find({ customer_id: { $in: orderCustomers } });
+        res.send(customers);
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+})
+
+app.get("/fetch_rest_orders_enriched/:rid", async function (req, res) {
+    try {
+        const rid = parseInt(req.params.rid);
+        const orders = await Order.find({ res_id: rid });
+        
+        const enrichedOrders = await Promise.all(orders.map(async (order) => {
+            let orderObj = order.toObject();
+            let customer = await Customer.findOne({ customer_id: order.customer_id });
+            orderObj.customer_name = customer ? customer.customer_name : "Unknown Customer";
+            orderObj.item_count = order.items.length;
+            return orderObj;
+        }));
+        
+        res.send(enrichedOrders);
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+})
+
+app.get("/fetch_rest_bills_enriched/:rid", async function (req, res) {
+    try {
+        const rid = parseInt(req.params.rid);
+        // 'Delivered' orders are considered bills
+        const bills = await Order.find({ res_id: rid, status: "Delivered" });
+        
+        const enrichedBills = await Promise.all(bills.map(async (bill) => {
+            let billObj = bill.toObject();
+            let customer = await Customer.findOne({ customer_id: bill.customer_id });
+            billObj.customer_name = customer ? customer.customer_name : "Unknown Customer";
+            billObj.bill_date = bill.order_date;
+            return billObj;
+        }));
+        
+        res.send(enrichedBills);
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+})
 app.post("/rest_update_pizza_withimg", upload.single('image'), async function (req, res) {
     let result2 = await Pizza.updateOne({ pizza_id: parseInt(req.body.pizzaid) }, { $set: { pizza_name: req.body.name, description: req.body.desc, price: parseInt(req.body.price), pizza_img: filepath, res_id: parseInt(req.body.restid), cat_id: parseInt(req.body.catid), pizza_type: req.body.type } });
     res.send(result2);

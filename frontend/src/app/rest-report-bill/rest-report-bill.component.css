@@ -1,0 +1,12 @@
+/* Styles for restaurant bill report */
+.report-paper {
+    background: white;
+    padding: 40px;
+    border-top: 5px solid #ffc400;
+}
+
+@media print {
+    .btn-print, .filter-card, .navbar {
+        display: none !important;
+    }
+}

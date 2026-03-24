@@ -24,6 +24,9 @@ import { AdminReportCustomerComponent } from './admin-report-customer/admin-repo
 import { AdminReportOrderComponent } from './admin-report-order/admin-report-order.component';
 import { AdminReportBillComponent } from './admin-report-bill/admin-report-bill.component';
 import { CustProfileComponent } from './cust-profile/cust-profile.component';
+import { RestReportCustomerComponent } from './rest-report-customer/rest-report-customer.component';
+import { RestReportOrderComponent } from './rest-report-order/rest-report-order.component';
+import { RestReportBillComponent } from './rest-report-bill/rest-report-bill.component';
 
 export const routes: Routes = [
     {path:"",component: HomeComponent},
@@ -51,6 +54,9 @@ export const routes: Routes = [
     {path:"rest_add_pizza",component: RestAddPizzaComponent, canActivate: [restGuard]},
     {path:"rest_update_pizza/:pid",component: RestUpdatePizzaComponent, canActivate: [restGuard]},
     {path:"rest_new_order_view",component: RestNewOrderViewComponent, canActivate: [restGuard]},
+    {path:"rest_report_customer",component: RestReportCustomerComponent, canActivate: [restGuard]},
+    {path:"rest_report_order",component: RestReportOrderComponent, canActivate: [restGuard]},
+    {path:"rest_report_bill",component: RestReportBillComponent, canActivate: [restGuard]},
 
     // Customer Routes
     {path:"cust_select_rest",component: CustSelectRestComponent, canActivate: [custGuard]},
