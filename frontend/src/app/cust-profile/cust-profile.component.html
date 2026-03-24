@@ -1,0 +1,123 @@
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card profile-card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-gradient bg-warning text-dark text-center py-4 position-relative">
+          <button *ngIf="customerData && !isEditing" class="btn btn-sm btn-dark position-absolute top-0 end-0 m-3 shadow-sm rounded-pill px-3" (click)="onEdit()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square mb-1 me-1" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            </svg> Edit
+          </button>
+          
+          <div class="profile-icon mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
+          </div>
+          <h3 class="mb-0 fw-bold">{{ isEditing ? 'Edit Profile' : 'My Profile' }}</h3>
+        </div>
+        
+        <!-- View Mode -->
+        <div class="card-body p-4 bg-white" *ngIf="customerData && !isEditing">
+          <div class="text-center mb-4">
+            <h4 class="text-dark fw-bold mb-1">{{customerData.customer_name}}</h4>
+            <span class="badge bg-secondary px-3 py-2 rounded-pill">{{customerData.email_id}}</span>
+          </div>
+
+          <div class="info-group">
+            <div class="row align-items-center py-3 border-bottom border-light">
+              <div class="col-4 text-muted fw-semibold">
+                Customer ID
+              </div>
+              <div class="col-8 text-dark fw-medium">
+                {{customerData.customer_id}}
+              </div>
+            </div>
+            
+            <div class="row align-items-center py-3 border-bottom border-light">
+              <div class="col-4 text-muted fw-semibold">
+                Mobile No
+              </div>
+              <div class="col-8 text-dark fw-medium">
+                {{customerData.mobile_no}}
+              </div>
+            </div>
+
+            <div class="row align-items-center py-3 border-bottom border-light">
+              <div class="col-4 text-muted fw-semibold">
+                Address
+              </div>
+              <div class="col-8 text-dark fw-medium">
+                {{customerData.address}}
+              </div>
+            </div>
+
+            <div class="row align-items-center py-3">
+              <div class="col-4 text-muted fw-semibold">
+                City
+              </div>
+              <div class="col-8 text-dark fw-medium">
+                {{customerData.city}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Mode -->
+        <div class="card-body p-4 bg-white" *ngIf="customerData && isEditing">
+          <form (ngSubmit)="onSave()" #profileForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-muted">Full Name</label>
+              <input type="text" class="form-control" name="customer_name" [(ngModel)]="editData.customer_name" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-muted">Email ID</label>
+              <input type="email" class="form-control" name="email_id" [(ngModel)]="editData.email_id" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-muted">Mobile No</label>
+              <input type="text" class="form-control" name="mobile_no" [(ngModel)]="editData.mobile_no" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-muted">Address</label>
+              <textarea class="form-control" name="address" [(ngModel)]="editData.address" rows="2" required></textarea>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-muted">City</label>
+                <input type="text" class="form-control" name="city" [(ngModel)]="editData.city" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-muted">Password</label>
+                <div class="input-group">
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" name="pwd" [(ngModel)]="editData.pwd" required>
+                  <button type="button" class="btn btn-outline-secondary" (click)="showPassword = !showPassword">
+                    <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" (click)="onCancel()">Cancel</button>
+              <button type="submit" class="btn btn-warning fw-bold px-4 rounded-pill shadow-sm">Save Changes</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="card-body p-5 text-center bg-white" *ngIf="!customerData">
+          <div class="spinner-border text-warning mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="text-muted fw-medium fs-5">Fetching your profile details...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

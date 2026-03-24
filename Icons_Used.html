@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icons Used</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 10px 20px;
+            color: #333;
+            height: 100vh;
+            overflow: hidden; /* prevents scrolling */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid #ff9800;
+        }
+        h2 {
+            text-align: center;
+            color: #d84315;
+            margin: 0 0 5px 0;
+            font-size: 24px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin: 0 0 15px 0;
+            font-size: 14px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .section-box {
+            background: #fffdfa;
+            border: 1px solid #ffe0b2;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .section-title {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            color: #e65100;
+            text-align: center;
+            border-bottom: 1px solid #ffcc80;
+            padding-bottom: 5px;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .icon-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 8px 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-card i {
+            font-size: 24px;
+            color: #444;
+            margin-bottom: 4px;
+        }
+        .icon-name {
+            font-weight: bold;
+            font-size: 11px;
+            color: #d84315;
+            margin-bottom: 2px;
+        }
+        .icon-desc {
+            font-size: 10px;
+            color: #666;
+            line-height: 1.1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🍕 UI Icon System: Order System</h2>
+    <p class="subtitle">Library Used: <strong>Bootstrap Icons v1.11.3</strong> (Imported via CDN)</p>
+
+    <div class="main-grid">
+        <!-- Admin Section -->
+        <div class="section-box">
+            <h3 class="section-title">👨‍💼 Admin Icons</h3>
+            <div class="icon-grid">
+                <div class="icon-card">
+                    <i class="bi bi-shop"></i>
+                    <div class="icon-name">bi-shop</div>
+                    <div class="icon-desc">View Restaurant</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-people"></i>
+                    <div class="icon-name">bi-people</div>
+                    <div class="icon-desc">View Customer</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-plus-circle"></i>
+                    <div class="icon-name">bi-plus-circle</div>
+                    <div class="icon-desc">Add Category</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    <div class="icon-name">bi-bar-graph</div>
+                    <div class="icon-desc">Reports Menu</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-file-text"></i>
+                    <div class="icon-name">bi-file-text</div>
+                    <div class="icon-desc">Detail Report</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Restaurant Section -->
+        <div class="section-box">
+            <h3 class="section-title">👨‍🍳 Restaurant Icons</h3>
+            <div class="icon-grid">
+                <div class="icon-card">
+                    <i class="bi bi-menu-up"></i>
+                    <div class="icon-name">bi-menu-up</div>
+                    <div class="icon-desc">View Pizza</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-bell-fill"></i>
+                    <div class="icon-name">bi-bell-fill</div>
+                    <div class="icon-desc">New Orders</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-graph-up"></i>
+                    <div class="icon-name">bi-graph-up</div>
+                    <div class="icon-desc">Sales Reports</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-receipt"></i>
+                    <div class="icon-name">bi-receipt</div>
+                    <div class="icon-desc">Bill Detail Report</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Section -->
+        <div class="section-box">
+            <h3 class="section-title">👤 Customer Icons</h3>
+            <div class="icon-grid">
+                <div class="icon-card">
+                    <i class="bi bi-shop-window"></i>
+                    <div class="icon-name">bi-shop-window</div>
+                    <div class="icon-desc">Select Restaurant</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-box-seam"></i>
+                    <div class="icon-name">bi-box-seam</div>
+                    <div class="icon-desc">View Parcel</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-card-list"></i>
+                    <div class="icon-name">bi-card-list</div>
+                    <div class="icon-desc">View All Orders</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-person-circle"></i>
+                    <div class="icon-name">bi-person-circle</div>
+                    <div class="icon-desc">Customer Profile</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-cart-check"></i>
+                    <div class="icon-name">bi-cart-check</div>
+                    <div class="icon-desc">Order Place</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- General / Guest Icons -->
+        <div class="section-box">
+            <h3 class="section-title">🏠 Gen / Nav Icons</h3>
+            <div class="icon-grid">
+                <div class="icon-card">
+                    <i class="bi bi-house-door-fill"></i>
+                    <div class="icon-name">bi-house</div>
+                    <div class="icon-desc">Home Page</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <div class="icon-name">bi-info</div>
+                    <div class="icon-desc">About Us</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-person-plus-fill"></i>
+                    <div class="icon-name">bi-person-plus</div>
+                    <div class="icon-desc">Registration Menu</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <div class="icon-name">bi-box-in</div>
+                    <div class="icon-desc">Login</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <div class="icon-name">bi-box-out</div>
+                    <div class="icon-desc">Logout</div>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-telephone-fill"></i>
+                    <div class="icon-name">bi-telephone</div>
+                    <div class="icon-desc">Contact Us</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

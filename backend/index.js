@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const sendEmail = require("./sendEmail");
 
 const Admin = require("./db/admin");
 const Restaurant = require("./db/restaurant");
@@ -67,6 +68,41 @@ app.post("/res_regis", async function (req, res) {
         }
         let ob1 = new Restaurant({ res_id: newresid, res_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd });
         let result3 = await ob1.save();
+        
+        // Email Notification Logic
+        try {
+            const message = `
+<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
+    <div style="background: linear-gradient(135deg, #f39c12, #d35400); padding: 30px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">🍕 Pizzeria Partners</h1>
+    </div>
+    <div style="padding: 40px 30px; background-color: #ffffff;">
+        <h3 style="color: #333333; font-size: 22px; margin-top: 0;">Hello ${req.body.name},</h3>
+        <p style="color: #555555; font-size: 16px; line-height: 1.6;">
+            Your restaurant registration is successful! We are excited to partner with you. 
+            An admin will review and approve your account shortly. 
+            Once approved, you can start adding your delicious pizzas and receiving orders.
+        </p>
+        <div style="padding: 20px; background-color: #fdf2e9; border-left: 4px solid #f39c12; border-radius: 4px; margin-top: 25px;">
+            <p style="margin: 0; color: #d35400; font-weight: bold; font-size: 15px;">Status: <span style="color: #e67e22;">Pending Approval</span></p>
+        </div>
+    </div>
+    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eaeaea;">
+        <p style="color: #888888; font-size: 14px; margin: 0;">© ${new Date().getFullYear()} Pizzeria. All rights reserved.</p>
+        <p style="color: #888888; font-size: 12px; margin-top: 5px;">Need help? Contact admin@pizzeria.com</p>
+    </div>
+</div>
+            `;
+            await sendEmail({
+                email: req.body.email,
+                subject: "Restaurant Registration Successful - Pizzeria",
+                message: message
+            });
+            console.log("Registration Email Sent to Restaurant");
+        } catch(err) {
+            console.log("Email could not be sent:", err.message);
+        }
+
         res.send(result3);
     } else {
         res.send({ "message": "Email Id Already Exists" });
@@ -144,6 +180,40 @@ app.post("/cust_regis", async function (req, res) {
         }
         let ob1 = new Customer({ customer_id: newcustid, customer_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd });
         let result3 = await ob1.save();
+        
+        // Email Notification Logic
+        try {
+            const message = `
+<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
+    <div style="background: linear-gradient(135deg, #ff6b6b, #c0392b); padding: 30px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">🍕 Welcome to Pizzeria!</h1>
+    </div>
+    <div style="padding: 40px 30px; background-color: #ffffff;">
+        <h3 style="color: #333333; font-size: 22px; margin-top: 0;">Hi ${req.body.name},</h3>
+        <p style="color: #555555; font-size: 16px; line-height: 1.6;">
+            We are thrilled to have you with us! Your customer account has been created successfully. 
+            Get ready to explore our delicious menus, find the best restaurants, and order your favorite pizzas with ease.
+        </p>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="http://localhost:4200" style="background-color: #ff6b6b; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; display: inline-block;">Explore Menus Now</a>
+        </div>
+    </div>
+    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eaeaea;">
+        <p style="color: #888888; font-size: 14px; margin: 0;">© ${new Date().getFullYear()} Pizzeria. All rights reserved.</p>
+        <p style="color: #888888; font-size: 12px; margin-top: 5px;">This is an automated message, please do not reply.</p>
+    </div>
+</div>
+            `;
+            await sendEmail({
+                email: req.body.email,
+                subject: "Registration Successful - Welcome to Pizzeria",
+                message: message
+            });
+            console.log("Registration Email Sent to Customer");
+        } catch(err) {
+            console.log("Email could not be sent:", err.message);
+        }
+
         res.send(result3);
     } else {
         res.send({ "message": "Email Id Already Exists" });

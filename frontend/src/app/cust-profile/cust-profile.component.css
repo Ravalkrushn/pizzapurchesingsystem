@@ -1,0 +1,25 @@
+.profile-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+
+.profile-icon {
+  display: inline-block;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.info-group .row {
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+}
+
+.info-group .row:hover {
+  background-color: #f8f9fa;
+}

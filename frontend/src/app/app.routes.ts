@@ -23,6 +23,7 @@ import { AdminReportRestaurantComponent } from './admin-report-restaurant/admin-
 import { AdminReportCustomerComponent } from './admin-report-customer/admin-report-customer.component';
 import { AdminReportOrderComponent } from './admin-report-order/admin-report-order.component';
 import { AdminReportBillComponent } from './admin-report-bill/admin-report-bill.component';
+import { CustProfileComponent } from './cust-profile/cust-profile.component';
 
 export const routes: Routes = [
     {path:"",component: HomeComponent},
@@ -57,4 +58,5 @@ export const routes: Routes = [
     {path:"cust_cart",component: CustCartComponent, canActivate: [custGuard]},
     {path:"cust_view_parcel",component: CustViewParcelComponent, canActivate: [custGuard]},
     {path:"cust_view_all_orders",component: CustViewParcelComponent, canActivate: [custGuard]},
+    {path:"cust-profile",component: CustProfileComponent, canActivate: [custGuard]},
 ];

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Information Architecture</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fcf9f2;
+    color: #333;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    min-height: 100vh;
+  }
+  .watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: 450px;
+    /* Clean transparent pizza icon as watermark */
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3595/3595458.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.12;
+    filter: blur(2px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .container {
+    max-width: 1100px;
+    width: 100%;
+    /* Keep the box slightly transparent to show the watermark through it subtly */
+    background: rgba(255, 255, 255, 0.94);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    z-index: 1;
+    position: relative;
+  }
+  .title {
+    text-align: center;
+    color: #d84315;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  }
+  .top-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .box {
+    background: linear-gradient(135deg, #ffb74d 0%, #ff9800 100%);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(255,152,0,0.3);
+    border: 2px solid #f57c00;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+  }
+  .box-light {
+    background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+    color: #e65100;
+    border: 2px solid #fb8c00;
+  }
+  
+  .columns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    position: relative;
+    gap: 30px;
+  }
+  
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 248, 240, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px dashed #ffb74d;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+  }
+
+  .col-title {
+    width: 100%;
+    background: #e65100;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(230,81,0,0.2);
+  }
+  
+  .col-title.admin { background: #1976d2; box-shadow: 0 4px 6px rgba(25,118,210,0.2); }
+  .col-title.resto { background: #2e7d32; box-shadow: 0 4px 6px rgba(46,125,50,0.2); }
+  .col-title.cust { background: #d84315; box-shadow: 0 4px 6px rgba(216,67,21,0.2); }
+
+  .step {
+    width: 90%;
+    background: white;
+    color: #424242;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .step:not(:last-child)::after {
+    content: '↓';
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ff9800;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  /* Connecting lines */
+  .v-line {
+    width: 2px;
+    height: 25px;
+    background: #ff9800;
+  }
+  .h-line-container {
+    width: 66%;
+    height: 2px;
+    background: #ff9800;
+    position: absolute;
+    top: -30px;
+    left: 17%;
+  }
+  .h-connector {
+    width: 2px;
+    height: 30px;
+    background: #ff9800;
+    position: absolute;
+  }
+  .h-c-left { left: 0; }
+  .h-c-center { left: 50%; }
+  .h-c-right { right: 0; }
+
+  /* Gifs */
+  .gif-bl {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 140px;
+    border-radius: 10px;
+    z-index: 100;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  }
+  .gif-br {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 140px;
+    border-radius: 10px;
+    z-index: 100;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  }
+</style>
+</head>
+<body>
+
+<div class="watermark"></div>
+
+<!-- Left GIF (Pizza Delivery Guy) -->
+<img class="gif-bl" src="https://media.tenor.com/2s_Z1v4W-PIAAAAi/pizza-delivery.gif" alt="delivery gif">
+
+<!-- Right GIF (Dancing Pizza Slice) -->
+<img class="gif-br" src="https://media.tenor.com/D2Zk-3E4eA4AAAAi/pizza-slice.gif" alt="pizza slice gif">
+
+<div class="container">
+  <div class="title">🍕 Perfect Information Architecture for Online Pizza System 🍕</div>
+  
+  <div class="top-section">
+    <div class="v-line"></div>
+    <div class="box box-light">🔐 Login / Registration</div>
+  </div>
+
+  <div class="columns">
+    <div class="h-line-container">
+      <div class="h-connector h-c-left"></div>
+      <div class="h-connector h-c-center"></div>
+      <div class="h-connector h-c-right"></div>
+    </div>
+
+    <!-- Admin Column -->
+    <div class="column">
+      <div class="col-title admin">🧑‍💼 Admin Login</div>
+      <div class="step">View & Update Restaurant</div>
+      <div class="step">View & Update Customer</div>
+      <div class="step">Add Category</div>
+      <div class="step">View Reports (Orders/Bills)</div>
+      <div class="step">🚪 Logout</div>
+    </div>
+
+    <!-- Restaurant Column -->
+    <div class="column">
+      <div class="col-title resto">👨‍🍳 Restaurant Login / Reg.</div>
+      <div class="step">Add Pizza</div>
+      <div class="step">View & Update Pizza</div>
+      <div class="step">View New Orders</div>
+      <div class="step">🚪 Logout</div>
+    </div>
+
+    <!-- Customer Column -->
+    <div class="column">
+      <div class="col-title cust">🍕 Customer Login / Reg.</div>
+      <div class="step">View Profile</div>
+      <div class="step">Select Restaurant</div>
+      <div class="step">View Pizza</div>
+      <div class="step">Cart (Shopping Cart)</div>
+      <div class="step">View Parcel (Current Order)</div>
+      <div class="step">View All Orders (History)</div>
+      <div class="step">🚪 Logout</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
