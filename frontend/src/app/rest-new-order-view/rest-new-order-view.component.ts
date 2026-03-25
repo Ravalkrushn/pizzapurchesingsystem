@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-rest-new-order-view',
@@ -14,13 +15,14 @@ export class RestNewOrderViewComponent implements OnInit {
   orders: any[] = [];
   resid: any;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) { }
 
   ngOnInit() {
     this.resid = localStorage.getItem("resid");
     if (!this.resid) {
-      alert("Please login as a restaurant to view orders.");
-      this.router.navigate(['/login']);
+      this.alertService.show("Please login as a restaurant to view orders.", 'info', 'Login Required', () => {
+          this.router.navigate(['/login']);
+      });
       return;
     }
     this.fetchOrders();
@@ -33,7 +35,7 @@ export class RestNewOrderViewComponent implements OnInit {
       },
       error: (err) => {
         console.log("Error fetching orders:", err);
-        alert("Could not fetch orders from the server.");
+        this.alertService.show("Could not fetch orders from the server.", 'error', 'Server Error');
       }
     });
   }
@@ -41,12 +43,12 @@ export class RestNewOrderViewComponent implements OnInit {
   updateStatus(orderId: number, status: string) {
     this.http.post("http://localhost:3000/update_order_status", { order_id: orderId, status: status }).subscribe({
       next: (res: any) => {
-        alert("Order status updated to " + status);
+        this.alertService.show(`Order status has been updated to: ${status}`, 'success', 'Status Updated');
         this.fetchOrders();
       },
       error: (err) => {
         console.log("Error updating status:", err);
-        alert("Could not update status.");
+        this.alertService.show("Could not update the order status.", 'error', 'Error');
       }
     });
   }

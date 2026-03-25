@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-admin-view-customer',
@@ -17,7 +18,7 @@ Math = Math;
 currentPage: number = 1;
 itemsPerPage: number = 6;
 
-  constructor(private http:HttpClient,private router:Router){
+  constructor(private http:HttpClient,private router:Router, private alertService: AlertService){
     this.fetchcustdetail();
   }
 
@@ -54,17 +55,20 @@ itemsPerPage: number = 6;
   }
 
   ondelete(cid:Number){
-    if(confirm("Are You Sure To Delete This Customer Detial? Then Press OK ")){
+    this.alertService.confirm("Are you sure you want to delete this customer's account? All associated data will be removed.", () => {
       this.http.delete("http://localhost:3000/delete_customer/"+cid)
         .subscribe({
           next:(response: any)=>{
-            alert("Customer Deleted Successfully");
+            this.alertService.show("Customer has been removed from the system.", 'success', 'Deleted');
             this.fetchcustdetail();
           },
           error: (err)=>{
             console.log("Error In Deletion Of Customer Detail: ",err);
+            this.alertService.show("Failed to delete the customer.", 'error', 'Error');
           }
-        })
-    }
+        });
+    }, () => {
+      console.log("Customer deletion cancelled.");
+    }, "Delete Account?");
   }
 }

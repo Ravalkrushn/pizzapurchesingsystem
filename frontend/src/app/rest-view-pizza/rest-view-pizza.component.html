@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col-md-12 text-center">
-                <h1 style="color: #ffc400;">VIEW CUSTOMER DETAIL</h1>
+                <h1 style="color: #ffc400;">VIEW PIZZA DETAILS</h1>
             </div>
 
         </div>
@@ -22,6 +22,7 @@
                                 <th>PIZZA NAME</th>
                                 <th>DESCRIPTION</th>
                                 <th>PRICE</th>
+                                <th>PIZZA TYPE</th>
                                 <th>PIZZA IMAGE</th>
                                 
                                 <th>UPDATE</th>
@@ -35,6 +36,7 @@
                                     <td>{{pizza.pizza_name}}</td>
                                     <td>{{pizza.description}}</td>
                                     <td>{{pizza.price}}</td>
+                                    <td>{{pizza.pizza_type}}</td>
                                     <td><img src="http://localhost:3000/pizza_img/{{pizza.pizza_img}}" style="width:150px; height:150px;" /></td>
                                     
                                     <td><a class="btn" style="background-color: #ffe57f;" routerLink="/rest_update_pizza/{{pizza.pizza_id}}">UPDATE</a></td>

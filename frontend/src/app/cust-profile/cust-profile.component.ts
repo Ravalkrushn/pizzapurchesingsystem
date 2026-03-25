@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-cust-profile',
@@ -16,7 +17,7 @@ export class CustProfileComponent implements OnInit {
   editData: any = {};
   showPassword: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alertService: AlertService) {}
 
   ngOnInit(): void {
     this.fetchProfile();
@@ -50,7 +51,7 @@ export class CustProfileComponent implements OnInit {
 
   onSave() {
     if(!this.editData.customer_name || !this.editData.email_id || !this.editData.mobile_no || !this.editData.city || !this.editData.address || !this.editData.pwd) {
-      alert("All fields are required!");
+      this.alertService.show("All fields are required to update your profile.", 'info', 'Incomplete Form');
       return;
     }
 
@@ -67,13 +68,13 @@ export class CustProfileComponent implements OnInit {
     this.http.post('http://localhost:3000/update_customer', payload)
       .subscribe({
         next: (res: any) => {
-          alert("Profile updated successfully!");
+          this.alertService.show("Your profile details have been updated successfully.", 'success', 'Profile Updated');
           this.isEditing = false;
           this.fetchProfile(); // Refresh the data
         },
         error: (err) => {
           console.error("Error updating profile", err);
-          alert("Error updating profile! Check console.");
+          this.alertService.show("An error occurred while updating your profile.", 'error', 'Error');
         }
       });
   }

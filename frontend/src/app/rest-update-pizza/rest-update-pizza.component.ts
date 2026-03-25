@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-rest-update-pizza',
@@ -21,7 +21,7 @@ export class RestUpdatePizzaComponent implements OnInit {
 
   restid: any;
   pid: any;
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private alertService: AlertService) {
     this.pid = this.route.snapshot.params["pid"];
 
   }
@@ -70,6 +70,14 @@ export class RestUpdatePizzaComponent implements OnInit {
     }
   }
 
+  onCategoryChange(event: any) {
+    const selectedCatId = event.target.value;
+    const selectedCategory = this.categories.find(cat => cat.cat_id == selectedCatId);
+    if (selectedCategory) {
+      this.pizzadetail.pizza_type = selectedCategory.cat_type;
+    }
+  }
+
   onsubmit(form: NgForm) {
     this.restid = localStorage.getItem("resid");
     if (this.txtimg) {
@@ -87,12 +95,12 @@ export class RestUpdatePizzaComponent implements OnInit {
       this.http.post('http://localhost:3000/rest_update_pizza_withimg', formData)
         .subscribe({
           next: (response) => {
-            alert("Pizza Detail Updated Succesfully");
-            this.router.navigate(["/rest_view_pizza"]);
+            this.alertService.show("Pizza details and image updated successfully.", 'success', 'Update Complete', () => {
+                this.router.navigate(["/rest_view_pizza"]);
+            });
           },
           error: (err) => {
-            alert("Error In Pizza Detail Updating " + err);
-            this.router.navigate(["/rest_update_pizza"]);
+            this.alertService.show("Failed to update pizza with image.", 'error', 'Error');
           }
         });
 
@@ -111,12 +119,12 @@ export class RestUpdatePizzaComponent implements OnInit {
       this.http.post("http://localhost:3000/rest_update_pizza", pdata)
         .subscribe({
           next: (response) => {
-            alert("Pizza Detail Updated Succesfully");
-            this.router.navigate(["/rest_view_pizza"]);
+            this.alertService.show("Pizza details updated successfully.", 'success', 'Update Complete', () => {
+                this.router.navigate(["/rest_view_pizza"]);
+            });
           },
           error: (err) => {
-            alert("Error In Pizza Detail Updating " + err);
-            this.router.navigate(["/rest_update_pizza"]);
+            this.alertService.show("Failed to update pizza details.", 'error', 'Error');
           }
         });
     }

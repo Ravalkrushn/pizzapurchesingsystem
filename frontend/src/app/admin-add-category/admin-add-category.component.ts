@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-admin-add-category',
@@ -23,7 +24,7 @@ export class AdminAddCategoryComponent {
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) {
     this.fetchCategories();
   }
 
@@ -58,7 +59,7 @@ export class AdminAddCategoryComponent {
 
   onsubmit() {
     if (this.catname == "" || this.cattype == "") {
-      alert("Please enter all details");
+      this.alertService.show("Please enter both category name and type.", 'info', 'Incomplete Form');
     } else {
       if (this.isEditMode) {
         this.updateCategory();
@@ -75,15 +76,15 @@ export class AdminAddCategoryComponent {
     };
     this.http.post("http://localhost:3000/add_category", obj).subscribe((res: any) => {
       if (res.cat_id) {
-        alert("Category Added Successfully");
+        this.alertService.show("New Category added to the system.", 'success', 'Success');
         this.resetForm();
         this.fetchCategories();
       } else {
-        alert("Error adding category: " + (res.message || "Unknown error"));
+        this.alertService.show("Could not add category. " + (res.message || ""), 'error', 'Error');
       }
     }, (err) => {
       console.error(err);
-      alert("Server Error");
+      this.alertService.show("A server error occurred while adding category.", 'error', 'Server Error');
     });
   }
 
@@ -94,25 +95,27 @@ export class AdminAddCategoryComponent {
       type: this.cattype
     };
     this.http.post("http://localhost:3000/update_category", obj).subscribe((res: any) => {
-      alert("Category Updated Successfully");
+      this.alertService.show("Category details updated successfully.", 'success', 'Updated');
       this.resetForm();
       this.fetchCategories();
     }, (err) => {
       console.error(err);
-      alert("Error updating category");
+      this.alertService.show("Failed to update category details.", 'error', 'Update Failed');
     });
   }
 
   onDelete(cat_id: number) {
-    if (confirm("Are you sure you want to delete this category?")) {
+    this.alertService.confirm("Are you sure you want to delete this category? This might affect pizzas associated with it.", () => {
       this.http.delete("http://localhost:3000/delete_category/" + cat_id).subscribe((res: any) => {
-        alert("Category Deleted Successfully");
+        this.alertService.show("Category has been removed from the system.", 'success', 'Deleted');
         this.fetchCategories();
       }, (err) => {
         console.error(err);
-        alert("Error deleting category");
+        this.alertService.show("An error occurred while deleting the category.", 'error', 'Delete Error');
       });
-    }
+    }, () => {
+      console.log("Category deletion cancelled.");
+    }, "Delete Category?");
   }
 
   onEdit(cat: any) {

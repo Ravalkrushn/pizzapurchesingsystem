@@ -1,1 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles for Pizzeria Purchasing System */
+
+/* Print Styles - Ensuring reports fit correctly and hide non-report UI elements */
+@media print {
+    /* Hide navigational and UI-only elements globally */
+    app-navbar, 
+    app-footer, 
+    app-notification, 
+    .btn-print, 
+    .filter-card, 
+    .no-print {
+        display: none !important;
+    }
+
+    /* Reset core layout for printing */
+    body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: white !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Container adjustments for printing */
+    .container, .container-fluid {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+    }
+
+    /* Specific report elements to hide *outside* the paper */
+    .report-header-ui, 
+    .display-4, 
+    .lead {
+        display: none !important;
+    }
+
+    /* Ensure report paper takes full page without offsets */
+    .report-paper {
+        margin: 0 !important;
+        padding: 20px !important;
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        min-height: initial !important;
+        overflow: visible !important;
+    }
+
+    /* Prevent tables from breaking in middle of row if possible */
+    table {
+        page-break-inside: auto;
+    }
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    thead {
+        display: table-header-group;
+    }
+}

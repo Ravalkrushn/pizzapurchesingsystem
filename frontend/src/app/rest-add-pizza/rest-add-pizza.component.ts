@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-rest-add-pizza',
@@ -18,7 +19,7 @@ fileTypeError: boolean = false;
   categories: any[] = [];
   selectedType: string = '';
 
-  constructor(public router: Router, public http: HttpClient) { }
+  constructor(public router: Router, public http: HttpClient, private alertService: AlertService) { }
   
   ngOnInit() {
     this.http.get("http://localhost:3000/fetch_categories").subscribe((res: any) => {
@@ -74,12 +75,12 @@ fileTypeError: boolean = false;
         this.http.post('http://localhost:3000/rest_add_pizza', formData)
         .subscribe({
             next:(response)=>{
-              alert("Pizza Detail Saved Succesfully");
-              this.router.navigate(["/rest_view_pizza"]);
+              this.alertService.show("Pizza details have been successfully saved.", 'success', 'Saved!', () => {
+                this.router.navigate(["/rest_view_pizza"]);
+              });
             },
             error: (err)=>{
-              alert("Error In Pizza uploading "+err);
-              this.router.navigate(["/rest_add_pizza"]);
+              this.alertService.show("An error occurred while uploading pizza details.", 'error', 'Upload Error');
             }
         });
           

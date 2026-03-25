@@ -68,13 +68,13 @@ app.post("/res_regis", async function (req, res) {
         }
         let ob1 = new Restaurant({ res_id: newresid, res_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd });
         let result3 = await ob1.save();
-        
+
         // Email Notification Logic
         try {
             const message = `
 <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
     <div style="background: linear-gradient(135deg, #f39c12, #d35400); padding: 30px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">🍕 Pizzeria Partners</h1>
+        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">🍕 Welcome to Pizzeria!</h1>
     </div>
     <div style="padding: 40px 30px; background-color: #ffffff;">
         <h3 style="color: #333333; font-size: 22px; margin-top: 0;">Hello ${req.body.name},</h3>
@@ -83,8 +83,8 @@ app.post("/res_regis", async function (req, res) {
             An admin will review and approve your account shortly. 
             Once approved, you can start adding your delicious pizzas and receiving orders.
         </p>
-        <div style="padding: 20px; background-color: #fdf2e9; border-left: 4px solid #f39c12; border-radius: 4px; margin-top: 25px;">
-            <p style="margin: 0; color: #d35400; font-weight: bold; font-size: 15px;">Status: <span style="color: #e67e22;">Pending Approval</span></p>
+        <div style="padding: 20px; text-align: center; background-color: #fff9db; border-radius: 8px; margin-top: 25px; border: 1px dashed #f39c12;">
+            <p style="margin: 0; color: #d35400; font-weight: bold; font-size: 18px;">Welcome to Pizzeria Website!</p>
         </div>
     </div>
     <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eaeaea;">
@@ -95,11 +95,11 @@ app.post("/res_regis", async function (req, res) {
             `;
             await sendEmail({
                 email: req.body.email,
-                subject: "Restaurant Registration Successful - Pizzeria",
+                subject: "Welcome to Pizzeria - Registration Successful",
                 message: message
             });
             console.log("Registration Email Sent to Restaurant");
-        } catch(err) {
+        } catch (err) {
             console.log("Email could not be sent:", err.message);
         }
 
@@ -180,7 +180,7 @@ app.post("/cust_regis", async function (req, res) {
         }
         let ob1 = new Customer({ customer_id: newcustid, customer_name: req.body.name, address: req.body.add, city: req.body.city, mobile_no: req.body.mno, email_id: req.body.email, pwd: req.body.pwd });
         let result3 = await ob1.save();
-        
+
         // Email Notification Logic
         try {
             const message = `
@@ -210,7 +210,7 @@ app.post("/cust_regis", async function (req, res) {
                 message: message
             });
             console.log("Registration Email Sent to Customer");
-        } catch(err) {
+        } catch (err) {
             console.log("Email could not be sent:", err.message);
         }
 
@@ -331,7 +331,7 @@ app.get("/fetch_rest_customers/:rid", async function (req, res) {
         const rid = parseInt(req.params.rid);
         // Find unique customer IDs that placed orders with this restaurant
         const orderCustomers = await Order.distinct("customer_id", { res_id: rid });
-        
+
         // Fetch full details for these customers
         const customers = await Customer.find({ customer_id: { $in: orderCustomers } });
         res.send(customers);
@@ -344,7 +344,7 @@ app.get("/fetch_rest_orders_enriched/:rid", async function (req, res) {
     try {
         const rid = parseInt(req.params.rid);
         const orders = await Order.find({ res_id: rid });
-        
+
         const enrichedOrders = await Promise.all(orders.map(async (order) => {
             let orderObj = order.toObject();
             let customer = await Customer.findOne({ customer_id: order.customer_id });
@@ -352,7 +352,7 @@ app.get("/fetch_rest_orders_enriched/:rid", async function (req, res) {
             orderObj.item_count = order.items.length;
             return orderObj;
         }));
-        
+
         res.send(enrichedOrders);
     } catch (err) {
         res.status(500).send({ error: err.message });
@@ -364,7 +364,7 @@ app.get("/fetch_rest_bills_enriched/:rid", async function (req, res) {
         const rid = parseInt(req.params.rid);
         // 'Delivered' orders are considered bills
         const bills = await Order.find({ res_id: rid, status: "Delivered" });
-        
+
         const enrichedBills = await Promise.all(bills.map(async (bill) => {
             let billObj = bill.toObject();
             let customer = await Customer.findOne({ customer_id: bill.customer_id });
@@ -372,7 +372,7 @@ app.get("/fetch_rest_bills_enriched/:rid", async function (req, res) {
             billObj.bill_date = bill.order_date;
             return billObj;
         }));
-        
+
         res.send(enrichedBills);
     } catch (err) {
         res.status(500).send({ error: err.message });
@@ -395,7 +395,7 @@ app.post("/update_order_status", async function (req, res) {
 
 app.post("/cancel_order", async function (req, res) {
     let result = await Order.updateOne(
-        { order_id: parseInt(req.body.order_id), status: "Pending" }, 
+        { order_id: parseInt(req.body.order_id), status: "Pending" },
         { $set: { status: "Cancelled" } }
     );
     res.send(result);
@@ -403,7 +403,7 @@ app.post("/cancel_order", async function (req, res) {
 
 app.post("/submit_rating", async function (req, res) {
     let result = await Order.updateOne(
-        { order_id: parseInt(req.body.order_id) }, 
+        { order_id: parseInt(req.body.order_id) },
         { $set: { rating: parseInt(req.body.rating) } }
     );
     res.send(result);
@@ -415,13 +415,13 @@ app.get("/fetch_all_orders", async function (req, res) {
         let orderObj = order.toObject();
         let restaurant = await Restaurant.findOne({ res_id: order.res_id });
         let customer = await Customer.findOne({ customer_id: order.customer_id });
-        
+
         orderObj.res_name = restaurant ? restaurant.res_name : "Unknown Restaurant";
         orderObj.customer_name = customer ? customer.customer_name : "Unknown Customer";
-        
+
         // Count items
         orderObj.item_count = order.items.length;
-        
+
         return orderObj;
     }));
     res.send(enrichedOrders);
@@ -434,14 +434,14 @@ app.get("/fetch_all_bills", async function (req, res) {
         let billObj = bill.toObject();
         let restaurant = await Restaurant.findOne({ res_id: bill.res_id });
         let customer = await Customer.findOne({ customer_id: bill.customer_id });
-        
+
         billObj.res_name = restaurant ? restaurant.res_name : "Unknown Restaurant";
         billObj.customer_name = customer ? customer.customer_name : "Unknown Customer";
-        
+
         // Since schema doesn't have bill_date, we use order_date or current date
         // For existing front-end compatibility, we'll map order_date to bill_date
         billObj.bill_date = bill.order_date;
-        
+
         return billObj;
     }));
     res.send(enrichedBills);

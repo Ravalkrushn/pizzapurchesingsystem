@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-cust-regis',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './cust-regis.component.css'
 })
 export class CustRegisComponent {
- constructor(private router:Router,private http:HttpClient){
+ constructor(private router:Router,private http:HttpClient, private alertService: AlertService){
 
   }
 
@@ -29,16 +30,18 @@ export class CustRegisComponent {
       .subscribe({
         next:(response:any)=>{
           if(response.message == "Email Id Already Exists"){
-            alert("Email Id Already Exists");
+            this.alertService.show("Email Id Already Exists", 'error', 'Duplicate Email');
           }else if(response.customer_name){
-            alert("Customer Registered Successfully");
-            this.router.navigate(["/login"]);
+            this.alertService.show("Customer Registered Successfully", 'success', 'Congratulations!', () => {
+              this.router.navigate(["/login"]);
+            });
           }else{
-            alert("Check Your Data");
+            this.alertService.show("Please check your data and try again.", 'error', 'Registration Failed');
           }
         },
         error:(err)=>{
-          console.log("Error In Restaurant Registration: ",err);
+          console.log("Error In Customer Registration: ",err);
+          this.alertService.show("Connection error. Please try again later.", 'error', 'Server Error');
         }
       })
   }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-cust-cart',
@@ -22,7 +23,7 @@ export class CustCartComponent implements OnInit {
   
   custid: any;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private alertService: AlertService) { }
 
   ngOnInit() {
     this.custid = localStorage.getItem("custid");
@@ -92,11 +93,11 @@ export class CustCartComponent implements OnInit {
 
   placeOrder() {
     if (this.cartItems.length === 0) {
-      alert("Your cart is empty!");
+      this.alertService.show("Your cart is empty! Please add some pizzas first.", 'info', 'Empty Cart');
       return;
     }
     if (this.deliveryAddress.trim() === "") {
-      alert("Please provide a delivery address!");
+      this.alertService.show("Please provide a valid delivery address.", 'info', 'Missing Address');
       return;
     }
 
@@ -113,10 +114,10 @@ export class CustCartComponent implements OnInit {
           if (res.url) {
             window.location.href = res.url; // Redirects browser to Stripe Checkout page
           } else {
-            alert("Error: Stripe URL not received");
+            this.alertService.show("Stripe payment URL could not be generated.", 'error', 'Payment Error');
           }
         }, (err) => {
-          alert("Server error connecting to Stripe. Did you paste your Secret Key in backend?");
+          this.alertService.show("Server error connecting to Stripe. Please check backend configuration.", 'error', 'Error');
         });
     } else {
       this.submitOrderToBackend(); // COD
@@ -142,17 +143,16 @@ export class CustCartComponent implements OnInit {
 
     this.http.post("http://localhost:3000/place_order", orderData).subscribe((res: any) => {
       if (res.order_id) {
-        alert("Order Placed Successfully! Order ID: " + res.order_id);
-        localStorage.removeItem("pizza_cart");
-        localStorage.removeItem("temp_order_details"); // Clean up
-        
-        // Remove query parameters from URL and redirect to parcel view
-        this.router.navigate(['/cust_view_parcel']);
+        this.alertService.show(`Your order #ORD${res.order_id} has been placed successfully! Enjoy your meal.`, 'success', 'Order Confirmed', () => {
+             localStorage.removeItem("pizza_cart");
+             localStorage.removeItem("temp_order_details"); // Clean up
+             this.router.navigate(['/cust_view_parcel']);
+        });
       } else {
-        alert("Error placing order. Please try again.");
+        this.alertService.show("We encountered an error while placing your order. Please try again.", 'error', 'Error');
       }
     }, (err) => {
-      alert("Server Error while placing order.");
+      this.alertService.show("A server-side error occurred while processing your order.", 'error', 'Server Error');
     });
   }
 }

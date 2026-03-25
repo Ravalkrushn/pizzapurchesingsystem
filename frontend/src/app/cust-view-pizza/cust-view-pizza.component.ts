@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-cust-view-pizza',
@@ -24,7 +25,7 @@ export class CustViewPizzaComponent implements OnInit {
   
   resid: any;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) { }
 
   ngOnInit() {
     this.resid = localStorage.getItem("selected_resid");
@@ -86,6 +87,6 @@ export class CustViewPizzaComponent implements OnInit {
     }
 
     localStorage.setItem("pizza_cart", JSON.stringify(cart));
-    alert(pizza.pizza_name + " added to cart!");
+    this.alertService.show(`${pizza.pizza_name} has been added to your cart.`, 'success', 'Cart Updated');
   }
 }
