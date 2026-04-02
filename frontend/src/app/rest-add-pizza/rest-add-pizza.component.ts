@@ -18,6 +18,7 @@ fileTypeError: boolean = false;
   restid:any;
   categories: any[] = [];
   selectedType: string = '';
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(public router: Router, public http: HttpClient, private alertService: AlertService) { }
   
@@ -41,10 +42,14 @@ fileTypeError: boolean = false;
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.txtimg = input.files[0];
-      this.validateFileType(input); // Pass the input element for validation
-     
-    } else {
-      
+      this.validateFileType(input);
+
+      // Create preview for image
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(this.txtimg);
     }
   }
 

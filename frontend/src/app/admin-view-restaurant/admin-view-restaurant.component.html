@@ -29,7 +29,6 @@
                                             <th class="py-3">CITY</th>
                                             <th class="py-3">MOBILE NO</th>
                                             <th class="py-3">EMAIL ID</th>
-                                            <th class="py-3">UPDATE</th>
                                             <th class="py-3">DELETE</th>
                                         </tr>
                                     </thead>
@@ -42,11 +41,6 @@
                                                 <td><span class="badge bg-light text-dark shadow-sm">{{res.city}}</span></td>
                                                 <td>{{res.mobile_no}}</td>
                                                 <td><a href="mailto:{{res.email_id}}" class="text-decoration-none">{{res.email_id}}</a></td>
-                                                <td>
-                                                    <a class="btn btn-sm shadow-sm" style="background-color: #ffe57f; font-weight: 600;" routerLink="/admin_update_restaurant/{{res.res_id}}">
-                                                        <i class="bi bi-pencil-square mr-1"></i> UPDATE
-                                                    </a>
-                                                </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-outline-danger shadow-sm" style="font-weight: 600;" (click)="ondelete(res.res_id)">
                                                         <i class="bi bi-trash mr-1"></i> DELETE

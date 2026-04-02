@@ -3,26 +3,22 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col-md-12 text-center">
-                <h1 style="color: #ffc400;">Add Pizza Detail</h1>
+                <h1 style="color: #ffc400;">Update Pizza Detail</h1>
             </div>
 
         </div>
         <div class="row mt-5">
 
             <div class="col-md-6 ">
-                <form #pform="ngForm" (submit)="onsubmit(pform)" novalidate>
+                <form #pform="ngForm" (ngSubmit)="onsubmit(pform)" novalidate>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Enter Pizza Name</label>
                         <input type="text" class="form-control" name="txtname" ngModel #txtname="ngModel" required
-                            pattern="[a-zA-Z ]+" minlength="2" [(ngModel)]="pizzadetail.pizza_name">
+                            [(ngModel)]="pizzadetail.pizza_name">
                         @if(txtname.invalid && (txtname.dirty || txtname.touched)){
-                        @if(txtname.hasError("required")){
-                        <p class="alert alert-danger">Please Enter Pizza Name</p>
-                        }@else if(txtname.hasError("pattern")){
-                        <p class="alert alert-danger">Please Enter Only Characters in Pizza Name</p>
-                        }@else if(txtname.hasError("minlength")){
-                        <p class="alert alert-danger">Please Enter More Than 2 Characters in Pizza Name</p>
-                        }
+                            @if(txtname.hasError("required")){
+                                <p class="alert alert-danger">Please Enter Pizza Name</p>
+                            }
                         }
                     </div>
                     <div class="mb-3">
@@ -87,8 +83,12 @@
                         <div class="text-danger">Please Select Only Image File No other File Type Allowed</div>
                         }
 
-                        <img src="http://localhost:3000/pizza_img/{{pizzadetail.pizza_img}}"
-                            style="width:150px; height:150px">
+                        @if(imagePreview){
+                            <img [src]="imagePreview" class="img-thumbnail" style="width:150px; height:150px; object-fit: cover;">
+                        }@else if(pizzadetail.pizza_img){
+                            <img src="http://localhost:3000/pizza_img/{{pizzadetail.pizza_img}}"
+                                class="img-thumbnail" style="width:150px; height:150px; object-fit: cover;">
+                        }
 
                     </div>
 

@@ -73,7 +73,12 @@
                     </div>
                     <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Select Image</label>
-                    <input type="file" class="form-control" name="txtimg" aria-describedby="emailHelp" ngModel #txtimg="ngModel" required   accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)" />
+                        <input type="file" class="form-control mt-2" name="txtimg" ngModel #txtimg="ngModel" required
+                            (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg" />
+                        
+                        @if (imagePreview) {
+                            <img [src]="imagePreview" class="img-thumbnail mt-3" style="width: 150px; height: 150px; object-fit: cover;">
+                        }
                      @if(txtimg.invalid && (txtimg.dirty || txtimg.touched)){
                         <div class="alert">
                             @if(txtimg.hasError('required')){

@@ -1,0 +1,63 @@
+<main class="py-4">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow border-0 rounded-3">
+                    <div class="bg-dark p-3 text-white text-center">
+                        <h4 class="mb-0">Restaurant Profile</h4>
+                    </div>
+
+                    <div class="card-body p-4 bg-white">
+                        <form #pform="ngForm" (ngSubmit)="onsubmit(pform)" novalidate>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small text-muted mb-1">Restaurant Name</label>
+                                    <input type="text" class="form-control form-control-sm" 
+                                           name="txtname" [(ngModel)]="resdetail.res_name" required #txtname="ngModel">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label small text-muted mb-1">Mobile No</label>
+                                    <input type="text" class="form-control form-control-sm" 
+                                           name="txtmno" [(ngModel)]="resdetail.mobile_no" required pattern="[0-9]{10}" #txtmno="ngModel">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label small text-muted mb-1">Email</label>
+                                    <input type="email" class="form-control form-control-sm" 
+                                           name="txtemail" [(ngModel)]="resdetail.email_id" required email #txtemail="ngModel">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label small text-muted mb-1">City</label>
+                                    <input type="text" class="form-control form-control-sm" 
+                                           name="txtcity" [(ngModel)]="resdetail.city" required #txtcity="ngModel">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label small text-muted mb-1">Address</label>
+                                    <textarea class="form-control form-control-sm" 
+                                              name="txtadd" [(ngModel)]="resdetail.address" required rows="2" #txtadd="ngModel"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label small text-muted mb-1">Password</label>
+                                    <input type="password" class="form-control form-control-sm" 
+                                           name="txtpwd" [(ngModel)]="resdetail.pwd" required minlength="4" #txtpwd="ngModel">
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <button type="submit" [disabled]="!pform.valid" 
+                                            class="btn btn-warning w-100 fw-bold py-2 shadow-sm">
+                                        SAVE CHANGES
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

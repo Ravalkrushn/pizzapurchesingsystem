@@ -16,8 +16,9 @@ import { AlertService } from '../services/alert.service';
 export class RestUpdatePizzaComponent implements OnInit {
   fileTypeError: boolean = false;
   txtimg: File | null = null;
-  public pizzadetail: any;
+  public pizzadetail: any = {};
   categories: any[] = [];
+  imagePreview: string | ArrayBuffer | null = null;
 
   restid: any;
   pid: any;
@@ -51,10 +52,14 @@ export class RestUpdatePizzaComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.txtimg = input.files[0];
-      this.validateFileType(input); // Pass the input element for validation
+      this.validateFileType(input);
 
-    } else {
-
+      // Create preview for image
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(this.txtimg);
     }
   }
 
